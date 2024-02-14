@@ -9,7 +9,7 @@ export const ValidarUsuario = async (req, res) => {
   
       if (rows.length > 0) {
         let token = jswt.sign({ user: rows[0] }, process.env.SECRET, { expiresIn: process.env.TIME });
-        return res.status(200).json({ "message": "Usuario autorizado", "token": token, "rol": rows[0].rol });
+        return res.status(200).json({ "message": "Usuario autorizado", "token": token, "rol": rows[0].rol, "nombre": rows[0].nombre });
       } else {
         return res.status(404).json({ "message": "Usuario no autorizado" });
       }

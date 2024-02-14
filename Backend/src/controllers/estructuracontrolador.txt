@@ -4,7 +4,7 @@ export const nombreFuncion = async (req, res) => {
 
     try {
 
-        const rol = req.user;
+        const rol = req.user.rol;
         if (rol === 'administrador') {
 
             //
