@@ -1,6 +1,8 @@
 import { pool } from "../database/conexion.js";
 
 // Constantes para mensajes y códigos de estado HTTP
+
+
 const ERROR_MESSAGE = {
     unauthorized: 'Error: usuario no autorizado',
     notFound: 'No se encontraron registros de usuarios',
@@ -14,6 +16,18 @@ const HTTP_STATUS = {
     badRequest: 400,
     internalServerError: 500
 };
+
+
+
+export const obtenerAlmacenamientoId = async(id_residuo) => {
+    let query = 'SELECT * from residuos WHERE id_residuo = ?'
+    let [result] = await pool.query(query, [id_residuo])
+    return result[0].fk_alm
+}
+
+export const actualizarCantidadResiduo = async(cantidad, id_residuo) => {
+    let query = `UPDATE resiudos set cantidad = '${cantidad}' WHERE id_residuo = ?`
+}
 
 
 
