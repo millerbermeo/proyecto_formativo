@@ -34,3 +34,16 @@ export const registrarElemento = async (req, res) => {
         res.status(500).json({ message: "Error interno del servidor" });
     }
 };
+export const eliminarElemento = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Realizar la eliminación en la base de datos
+        await pool.query("DELETE FROM elementos WHERE id_elemento = ?", [id]);
+
+        res.status(200).json({ message: "Elemento eliminado exitosamente" });
+    } catch (error) {
+        console.error("Error al eliminar el elemento:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+};
