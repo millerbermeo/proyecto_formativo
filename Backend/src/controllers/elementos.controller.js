@@ -47,3 +47,17 @@ export const eliminarElemento = async (req, res) => {
         res.status(500).json({ message: "Error interno del servidor" });
     }
 };
+export const actualizarElemento = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, tipo, cantidad } = req.body;
+
+        // Realizar la actualización en la base de datos
+        await pool.query("UPDATE elementos SET nombre_elm = ?, tipo_elm = ?, cantidad = ? WHERE id_elemento = ?", [nombre, tipo, cantidad, id]);
+
+        res.status(200).json({ message: "Elemento actualizado exitosamente" });
+    } catch (error) {
+        console.error("Error al actualizar el elemento:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+};

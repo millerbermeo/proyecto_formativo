@@ -1,7 +1,7 @@
 //RUTAS SEBAS
 import { Router } from "express";
 import { validarToken } from "../controllers/validator.controller.js";
-import { listarElementos, registrarElemento, eliminarElemento} from "../controllers/elementos.controller.js";
+import { listarElementos, registrarElemento, eliminarElemento, actualizarElemento} from "../controllers/elementos.controller.js";
 
 const router = Router();
 
@@ -14,6 +14,6 @@ router.post('/registrar', validarToken, registrarElemento);
 router.delete('/eliminar/:id', validarToken, eliminarElemento);
 
 // Ruta para actualizar un elemento por su ID
-//router.put('/actualizar/:id', validarToken, actualizarElemento);
+router.put('/actualizar/:id', validarToken, actualizarElemento);
 
 export default router;
