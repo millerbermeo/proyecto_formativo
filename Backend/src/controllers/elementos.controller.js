@@ -10,14 +10,27 @@ export const listarElementos = async (req, res) => {
             const result = await pool.query(query);
 
             if (result.length > 0) {
-                return res.status(200).json(result); // Devolver la lista de elementos si se encontraron registros
+                return res.status(200).json(result); 
             } else {
-                return res.status(404).json({ 'message': 'No se encontraron registros de elementos' }); // No se encontraron registros de elementos
+                return res.status(404).json({ 'message': 'No se encontraron registros de elementos' });
             }
         } else {
-            return res.status(403).json({ 'message': 'Error: usuario no autorizado' }); // Mensaje de usuario no autorizado
+            return res.status(403).json({ 'message': 'Error: usuario no autorizado' }); 
         }
     } catch (error) {
-        return res.status(500).json({ 'message': 'Error: ' + error }); // Error interno del servidor
+        return res.status(500).json({ 'message': 'Error: ' + error }); 
+    }
+};
+export const registrarElemento = async (req, res) => {
+    try {
+        const { nombre, tipo, cantidad } = req.body;
+
+        // Realizar la inserción en la base de datos
+        await pool.query("INSERT INTO elementos (nombre_elm, tipo_elm, cantidad) VALUES (?, ?, ?)", [nombre, tipo, cantidad]);
+
+        res.status(201).json({ message: "Elemento registrado exitosamente" });
+    } catch (error) {
+        console.error("Error al registrar el elemento:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
     }
 };
