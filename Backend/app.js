@@ -9,7 +9,7 @@ import validator from "./src/routers/validator.router.js"
 // import actividad  from "./src/routers/actividad.router.js"
 
 //ruta para sebas
-// import elemento  from "./src/routers/elemento.router.js"
+import elemento  from "./src/routers/elemento.router.js"
 
 //ruta para ander
 // import usuarios  from "./src/routers/usuario.router.js"
@@ -42,7 +42,7 @@ app.use('/', validator);
 
 // app.use('/residuo', residuo) // descomentar aqui va la ruta acceder al controlador de miller
 
-// app.use('/elemento', elemento) // descomentar aqui va la ruta acceder al controlador de sebas
+app.use('/elemento', elemento) // descomentar aqui va la ruta acceder al controlador de sebas
 
 // app.use('/actividad', actividad) // descomentar aqui va la ruta acceder al controlador de jose
 
