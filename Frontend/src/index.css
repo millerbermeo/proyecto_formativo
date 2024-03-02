@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #msg {
   visibility: hidden;
   color: red;
@@ -36,3 +37,8 @@ a {
   text-align: center;
   padding-top: 20px;
 }
+=======
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+>>>>>>> 62bdf8ad0562bc20f04fc4990e9ef40940a627aa

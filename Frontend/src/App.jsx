@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 
 const App = () => {
@@ -71,6 +72,24 @@ const App = () => {
           </option>
         ))}
       </select>
+=======
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import DashboardPage from "./pages/DashboardPage"
+
+
+function App() {
+
+  return (
+   <>
+   <BrowserRouter>
+   <Routes>
+      <Route path="/" element={<DashboardPage/>}/>
+    </Routes>
+   </BrowserRouter>
+   </>
+  )
+}
+>>>>>>> 62bdf8ad0562bc20f04fc4990e9ef40940a627aa
 
       <button onClick={startRecording} disabled={recording}>
         Grabar
