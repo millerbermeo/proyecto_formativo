@@ -1,6 +1,6 @@
 import { pool } from "../database/conexion.js";
+import { validationResult } from 'express-validator';
 
-// Constantes para mensajes y códigos de estado HTTP
 
 
 const ERROR_MESSAGE = {
@@ -99,14 +99,15 @@ export const registrarMovimiento = async (req, res) => {
             return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
         }
 
+      
+
         //variables del body
         const { id_residuo, cantidad, usuario_adm, fk_actividad } = req.body;
 
-
-        if (!Number.isInteger(id_residuo) || !Number.isInteger(cantidad) || !Number.isInteger(usuario_adm) || !Number.isInteger(fk_actividad)) {
-            return res.status(HTTP_STATUS.badRequest).json({ 'message': 'id_residuo, cantidad, usuario_adm y fk_actividad deben ser números enteros' });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-
 
         // Iniciar transacción
         await pool.query('START TRANSACTION');
@@ -147,15 +148,16 @@ export const registrarSalida = async (req, res) => {
         if (rol !== 'administrador') {
             return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
         }
+        
 
         //variables del body
         const { destino, usuario_adm } = req.body;
 
 
-        if (!Number.isInteger(destino) || !Number.isInteger(usuario_adm)) {
-            return res.status(HTTP_STATUS.badRequest).json({ 'message': 'destino y usuario_adm deben ser números enteros' });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-
 
         // Iniciar transacción
         await pool.query('START TRANSACTION');
@@ -192,19 +194,24 @@ export const registrarResiduo = async (req, res) => {
             return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
         }
 
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         //variables del body
-        const { nombre_residuo, residuo, tipo_residuo, unidad_medida, fk_alm } = req.body;
+        const { nombre_residuo, residuo, tipo_residuo, cantidad, unidad_medida, fk_alm } = req.body;
 
 
 
-        let query_1 = `INSERT INTO residuos (nombre_residuo, residuo, tipo_residuo, cantidad, unidad_medida, fk_alm) VALUES (?, ?, ?, ?, 0, ?)`;
+        let query_1 = `INSERT INTO residuos (nombre_residuo, residuo, tipo_residuo, cantidad, unidad_medida, fk_alm) VALUES (?, ?, ?, ?, ?, ?)`;
 
 
         // Ejecutar la consulta SQL
-        let [result] = await pool.query(query_1, [nombre_residuo, residuo, tipo_residuo, unidad_medida, fk_alm]);
+        let [result] = await pool.query(query_1, [nombre_residuo, residuo, tipo_residuo, cantidad, unidad_medida, fk_alm]);
 
 
-        return res.status(HTTP_STATUS.ok).json({ 'message': 'Movimiento registrado correctamente' });
+        return res.status(HTTP_STATUS.ok).json({ 'message': 'Residuo registrado correctamente' });
     } catch (error) {
         // Manejo de errores
         console.error('Error en registrarMovimiento:', error);
@@ -217,6 +224,15 @@ export const registrarResiduo = async (req, res) => {
 export const buscarResiduoId = async (req, res) => {
 
     try {
+
+        const rol = req.user.rol;
+
+        // Validar autorización del usuario
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+
         let id = req.params.id
 
         let query = `SELECT * FROM residuos WHERE id_residuo = ?`
@@ -225,7 +241,7 @@ export const buscarResiduoId = async (req, res) => {
         if (result.length > 0) {
             res.status(HTTP_STATUS.ok).json(result)
         } else {
-            res.status(HTTP_STATUS.notFound).json({'message': ERROR_MESSAGE.notFound})
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
         }
     } catch (error) {
         console.error('Error en al listar residuo', error);
@@ -236,15 +252,29 @@ export const buscarResiduoId = async (req, res) => {
 export const actualizarResiduoId = async (req, res) => {
 
     try {
+
+        const rol = req.user.rol;
+
+        // Validar autorización del usuario
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
         let id = req.params.id
 
         const { nombre_residuo, residuo, tipo_residuo, cantidad, unidad_medida, fk_alm } = req.body;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
 
         let query = `UPDATE residuos SET nombre_residuo = '${nombre_residuo}', residuo = '${residuo}', tipo_residuo = '${tipo_residuo}', cantidad = '${cantidad}', unidad_medida = '${unidad_medida}', fk_alm  = '${fk_alm}' WHERE id_residuo = ${id}`
         let [result] = await pool.query(query)
 
         if (result.affectedRows > 0) {
-            res.status(HTTP_STATUS.ok).json({"message" : "Actualizado correctamente"})
+            res.status(HTTP_STATUS.ok).json({ "message": "Actualizado correctamente" })
         } else {
             res.status(HTTP_STATUS.notFound).json(ERROR_MESSAGE.notFound)
         }
@@ -254,3 +284,76 @@ export const actualizarResiduoId = async (req, res) => {
     }
 }
 
+export const registrarAlmacenamiento = async (req, res) => {
+    try {
+
+        const rol = req.user.rol;
+
+        // Validar autorización del usuario
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        //variables del body
+        const { nombre_alm } = req.body;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+
+        let query = 'INSERT into almacenamiento (nombre_alm, cantidad_alm) VALUES (?, ?)'
+        let [result] = await pool.query(query, [nombre_alm, 0])
+
+        if (result.affectedRows > 0) {
+            return res.status(HTTP_STATUS.ok).json({ 'message': 'almacenamiento registrado correctamente' });
+        } else {
+            return res.status(HTTP_STATUS.badRequest).json({ 'message': 'no se registro la bodega' });
+        }
+
+
+    } catch (error) {
+        // Manejo de errores
+        console.error('Error en registrar Almacenamiento:', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+
+export const registrarEmpresas = async (req, res) => {
+    try {
+
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+
+        const rol = req.user.rol;
+
+        // Validar autorización del usuario
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        //variables del body
+        const { nombre_empresa, descripcion_empresa, contacto_empresa } = req.body;
+
+        let query = 'INSERT into empresas_recoleccion (nombre_empresa, descripcion_empresa, contacto_empresa) VALUES (?, ?, ?)'
+        let [result] = await pool.query(query, [nombre_empresa, descripcion_empresa, contacto_empresa])
+
+        if (result.affectedRows > 0) {
+            return res.status(HTTP_STATUS.ok).json({ 'message': 'Empresa registrada correctamente' });
+        } else {
+            return res.status(HTTP_STATUS.badRequest).json({ 'message': 'no se registro la empresa con exito' });
+        }
+
+        
+    } catch (error) {
+        // Manejo de errores
+        console.error('Error en registrar Almacenamiento:', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
