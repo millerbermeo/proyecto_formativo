@@ -1,1 +1,11 @@
 //RUTAS ANDERSON
+
+
+import { Router } from "express";
+import { validarToken } from "../controllers/validator.controller.js";
+
+const router = Router()
+
+router.get('/listar', validarToken, aqui ruta del controlador)
+
+export default router
