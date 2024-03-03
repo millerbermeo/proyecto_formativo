@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors"
 import {pool} from "./src/database/conexion.js";
 import validator from "./src/routers/validator.router.js"
-// import residuo  from "./src/routers/residuo.router.js"
+import residuo  from "./src/routers/residuo.router.js"
 
 //ruta para jose
 // import actividad  from "./src/routers/actividad.router.js"
@@ -40,7 +40,7 @@ app.use('/', validator);
 
 app.use('/usuario', usuarios) // descomentar aqui va la ruta acceder al controlador de ander
 
-// app.use('/residuo', residuo) // descomentar aqui va la ruta acceder al controlador de miller
+app.use('/residuo', residuo) // descomentar aqui va la ruta acceder al controlador de miller
 
 app.use('/elemento', elemento) // descomentar aqui va la ruta acceder al controlador de sebas
 
