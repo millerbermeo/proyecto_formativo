@@ -39,9 +39,15 @@ export const eliminarElemento = async (req, res) => {
         const { id } = req.params;
 
         // Realizar la eliminación en la base de datos
-        await pool.query("DELETE FROM elementos WHERE id_elemento = ?", [id]);
+      const [result] =  await pool.query("DELETE FROM elementos WHERE id_elemento = ?", [id]);
 
+
+      if (result.affectedRows > 0) {
         res.status(200).json({ message: "Elemento eliminado exitosamente" });
+      } else {
+        res.status(200).json({ message: "Elemento no se pudo eliminar" });
+      }
+
     } catch (error) {
         console.error("Error al eliminar el elemento:", error);
         res.status(500).json({ message: "Error interno del servidor" });
