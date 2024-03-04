@@ -1,61 +1,35 @@
 import React from 'react'
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, getKeyValue} from "@nextui-org/react";
-import {EditIcon} from "./EditIcon";
-import {DeleteIcon} from "./DeleteIcon";
-import {EyeIcon} from "./EyeIcon";
-import {columns, users} from "./data";
-
-const statusColorMap = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
-
+import LoginComponent from '../components/LoginComponent'
 
 function LoginPage() {
-
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
   return (
     <>
-        <Button onPress={onOpen}>Open Modal</Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-              <ModalBody>
-                <p> 
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit
-                  dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. 
-                  Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. 
-                  Et mollit incididunt nisi consectetur esse laborum eiusmod pariatur 
-                  proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <main className='w-full h-screen bg-red-400 relative'>
+        <LoginComponent />
+        <div className='w-full h-[50%] bg-gray-100 p-48 py-36'>
+          <div className='w-[50%] flex flex-col gap-y-10'>
+            <h1 className='text-7xl font-black'>
+              Bienvenido al <br />
+              <span className='text-8xl'>
+                Centro de Acopio
+              </span>
+            </h1>
+
+            <p className='text-xl w-[80%] text-gray-600'>
+              Transformemos basura en oportunidades, cada recogida es un paso hacia
+              un futuro más limpio y sostenible. <span className='text-[#38A800] font-medium'>
+              ¡Juntos, construimos un
+              mundo mejor, un reciclaje a la vez!
+              </span>
+            </p>
+          </div>
+        </div>
+        <div className='w-full h-[50%] bg-white px-48 py-20'>
+          <div className='w-[50%] flex flex-col gap-y-10'>
+            <img className='w-[60%]' src="undraw_explore_re_8l4v.svg" alt="" />
+          </div>
+        </div>
+      </main>
     </>
   )
 }
