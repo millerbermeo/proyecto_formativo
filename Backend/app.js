@@ -12,7 +12,7 @@ import validator from "./src/routers/validator.router.js"
 // import elemento  from "./src/routers/elemento.router.js"
 
 //ruta para ander
-// import usuarios  from "./src/routers/usuario.router.js"
+ import usuarios  from "./src/routers/usuario.router.js"
 
 
 const app = express()
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 
 app.use('/', validator);
 
-// app.use('/usuario', usuarios) // descomentar aqui va la ruta acceder al controlador de ander
+app.use('/usuario', usuarios) // descomentar aqui va la ruta acceder al controlador de ander
 
 // app.use('/residuo', residuo) // descomentar aqui va la ruta acceder al controlador de miller
 
