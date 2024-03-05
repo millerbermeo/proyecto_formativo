@@ -15,7 +15,7 @@ function LoginPage() {
               </span>
             </h1>
 
-            <p className='text-lg 2xl:text-xl w-[90%] text-gray-600'>
+            <p className='text-lg 2xl:text-xl w-[90%] 2xl:w-[80%] text-gray-600'>
               Transformemos basura en oportunidades, cada recogida es un paso hacia
               un futuro más <span className='text-[#38A800] font-bold'> limpio y sostenible. 
               ¡Juntos, construimos un

@@ -210,8 +210,13 @@ export const registrarResiduo = async (req, res) => {
         // Ejecutar la consulta SQL
         let [result] = await pool.query(query_1, [nombre_residuo, residuo, tipo_residuo, cantidad, unidad_medida, fk_alm]);
 
+        if (result.affectedRows > 0) {
+            return res.status(HTTP_STATUS.ok).json({ 'message': 'Residuo registrado correctamente' });
+        } else {
+            return res.status(HTTP_STATUS.badRequest).json({ 'message': 'No se puedo Registrar' });
+        }
 
-        return res.status(HTTP_STATUS.ok).json({ 'message': 'Residuo registrado correctamente' });
+    
     } catch (error) {
         // Manejo de errores
         console.error('Error en registrarMovimiento:', error);
@@ -354,6 +359,88 @@ export const registrarEmpresas = async (req, res) => {
     } catch (error) {
         // Manejo de errores
         console.error('Error en registrar Almacenamiento:', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+
+
+
+export const listarResiduo = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        let query = `SELECT *, t.tipo_residuo as tipo, a.nombre_alm as alm FROM residuos r JOIN tipos t ON r.residuo = t.id_tipo JOIN almacenamiento a ON r.fk_alm = a.id_almacenamiento`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al listar residuo', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+
+
+export const listarTiposResiduos = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        let query = `SELECT * FROM tipos`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al listar residuo', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+
+
+export const listarAlmacenamientos = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        let query = `SELECT * FROM almacenamiento`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al listar residuo', error);
         return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
     }
 }

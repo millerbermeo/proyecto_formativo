@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import { validarToken } from "../controllers/validator.controller.js";
-import { actualizarResiduoId, buscarResiduoId, registrarAlmacenamiento, registrarEmpresas, registrarMovimiento, registrarResiduo, registrarSalida } from "../controllers/residuo.controller.js";
+import { actualizarResiduoId, buscarResiduoId, listarAlmacenamientos, listarResiduo, listarTiposResiduos, registrarAlmacenamiento, registrarEmpresas, registrarMovimiento, registrarResiduo, registrarSalida } from "../controllers/residuo.controller.js";
 import { body } from 'express-validator';
 
 
@@ -57,7 +57,9 @@ router.put('/actualizar/:id', validarToken,[
 ] ,actualizarResiduoId)
 
 
-
+router.get('/listar', validarToken, listarResiduo)
+router.get('/listar_tipos', validarToken, listarTiposResiduos)
+router.get('/listar_alm', validarToken, listarAlmacenamientos)
 router.get('/buscar/:id', validarToken, buscarResiduoId)
 
 export default router
