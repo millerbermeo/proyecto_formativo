@@ -17,12 +17,14 @@ function ModalRegistrarMov() {
 
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
+    const [data3, setData3] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axiosClient.get('http://localhost:3000/residuo/listar_tipos');
+                const response = await axiosClient.get('http://localhost:3000/residuo/listar_admin');
                 setData(response.data);
+                console.log("admin", response.data)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -34,7 +36,7 @@ function ModalRegistrarMov() {
     useEffect(() => {
         const fetchData2 = async () => {
             try {
-                const response = await axiosClient.get('http://localhost:3000/residuo/listar_alm');
+                const response = await axiosClient.get('http://localhost:3000/residuo/listar');
                 setData2(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -43,6 +45,22 @@ function ModalRegistrarMov() {
 
         fetchData2();
     }, []);
+
+    useEffect(() => {
+        const fetchData3 = async () => {
+            try {
+                const response = await axiosClient.get('http://localhost:3000/residuo/listar_actividad');
+                setData3(response.data);
+                console.log("dataaa AAAA", response.data)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData3();
+    }, []);
+
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -56,7 +74,7 @@ function ModalRegistrarMov() {
         try {
             // Aquí puedes enviar los datos a tu backend utilizando axios o fetch
             console.log(formData);
-            await axiosClient.post('http://localhost:3000/residuo/registrar', formData).then((response) => {
+            await axiosClient.post('http://localhost:3000/residuo/registrarmov', formData).then((response) => {
                 if (response.status == 200) {
                     alert(response.data)
                 } else {
@@ -70,7 +88,7 @@ function ModalRegistrarMov() {
 
     return (
         <div className="flex flex-col gap-2">
-            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Registrar</Button>
+            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Registrar Movimiento</Button>
 
             <Modal
                 isOpen={isOpen}
@@ -80,51 +98,56 @@ function ModalRegistrarMov() {
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Registrar Residuo
+                                Registrar Movimiento
                             </ModalHeader>
                             <ModalBody>
-                                <Input
+                                <Select
                                     autoFocus
-                                    label="Nombre"
-                                    placeholder="Enter nombre"
-                                    variant="bordered"
-                                    name="nombre_residuo"
-                                    value={formData.nombre_residuo}
-                                    onChange={handleChange}
-                                />
-                                <Select
                                     label="Residuo"
-                                    placeholder="Seleccione un Residuo"
-                                    name="residuo"
-                                    value={formData.residuo}
-                                    onChange={handleChange}
-                                >
-                                    <SelectItem onClick={() => setFormData({ ...formData, residuo: "1" })}>
-                                        No peligrosos
-                                    </SelectItem>
-                                    <SelectItem onClick={() => setFormData({ ...formData, residuo: "2" })}>
-                                        Peligrosos
-                                    </SelectItem>
-                                </Select>
-
-
-
-                                <Select
-                                    label="Tipo Residuo"
                                     placeholder="Selecciona un Residuo"
-                                    name="tipo_residuo"
-                                    value={formData.tipo_residuo}
+                                    name="id_residuo"
+                                    value={formData.id_residuo}
                                     onChange={handleChange}
                                 >
-                                    {data.map((item, index) => (
-                                        <SelectItem key={index} value={item.id_tipo}>
-                                            {item.tipo_residuo}
+                                    {data2.map((item, index) => (
+                                        <SelectItem key={index} value={item.id_residuo}>
+                                            {item.nombre_residuo}
                                         </SelectItem>
                                     ))}
                                 </Select>
 
+                                <Select
+                                    label="Adminstrador"
+                                    placeholder="Selecciona un Encargado"
+                                    name="usuario_adm"
+                                    value={formData.usuario_adm}
+                                    onChange={handleChange}
+                                >
+                                    {data.map((item, index) => (
+                                        <SelectItem key={index} value={item.id_usuario}>
+                                            {item.nombre}
+                                        </SelectItem>
+                                    ))}
+                                </Select>
+
+
+                                <Select
+                                    label="actividad"
+                                    placeholder="Selecciona una actividad"
+                                    name="fk_actividad" // Cambiar de 'id_actividad' a 'fk_actividad'
+                                    value={formData.fk_actividad}
+                                    onChange={handleChange}
+                                >
+                                    {data3.map((item, index) => (
+                                        <SelectItem key={index} value={item.fk_actividad}>
+                                            {item.nombre_act}
+                                        </SelectItem>
+                                    ))}
+                                </Select>
+
+
+
                                 <Input
-                                    autoFocus
                                     label="cantidad"
                                     placeholder="Enter cantidad"
                                     variant="bordered"
@@ -133,44 +156,10 @@ function ModalRegistrarMov() {
                                     onChange={handleChange}
                                 />
 
-                                <Select
-                                    label="Unidad medida"
-                                    placeholder="Selecciona una unidad"
-                                    name="unidad_medida"
-                                    value={formData.unidad_medida}
-                                    onChange={handleChange}
-                                >
-                                    <SelectItem onClick={() => setFormData({ ...formData, unidad_medida: "1" })}>
-                                        kilogramo
-                                    </SelectItem>
-                                    <SelectItem onClick={() => setFormData({ ...formData, unidad_medida: "2" })}>
-                                        gramo
-                                    </SelectItem>
-                                    <SelectItem onClick={() => setFormData({ ...formData, unidad_medida: "3" })}>
-                                        litros
-                                    </SelectItem>
-                                    <SelectItem onClick={() => setFormData({ ...formData, unidad_medida: "4" })}>
-                                        m3
-                                    </SelectItem>
-                                    <SelectItem onClick={() => setFormData({ ...formData, unidad_medida: "5" })}>
-                                        m2
-                                    </SelectItem>
-                                </Select>
 
 
-                                <Select
-                                    label="Almacenamiento"
-                                    placeholder="Selecciona un almacenamiento"
-                                    name="fk_alm"
-                                    value={formData.fk_alm}
-                                    onChange={handleChange}
-                                >
-                                    {data2.map((item, index) => (
-                                        <SelectItem key={index} value={item.id_almacenamiento}>
-                                            {item.nombre_alm}
-                                        </SelectItem>
-                                    ))}
-                                </Select>
+
+
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="light" onPress={onClose}>

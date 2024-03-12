@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import { validarToken } from "../controllers/validator.controller.js";
-import { actualizarResiduoId, buscarResiduoId, listarAlmacenamientos, listarMovimientos, listarResiduo, listarTiposResiduos, registrarAlmacenamiento, registrarEmpresas, registrarMovimiento, registrarResiduo, registrarSalida } from "../controllers/residuo.controller.js";
+import { actualizarResiduoId, buscarResiduoId, listarActividades, listarAdmin, listarAlmacenamientos, listarMovimientos, listarResiduo, listarTiposResiduos, registrarAlmacenamiento, registrarEmpresas, registrarMovimiento, registrarResiduo, registrarSalida } from "../controllers/residuo.controller.js";
 import { body } from 'express-validator';
 
 
@@ -19,12 +19,7 @@ router.post('/registrar', validarToken, [
 
 
 
-router.post('/registrarmov', validarToken, [
-    body('id_residuo').notEmpty().toInt().isInt(),
-    body('cantidad').notEmpty().toInt().isInt(),
-    body('usuario_adm').notEmpty().toInt().isInt(),
-    body('fk_actividad').notEmpty().toInt().isInt()
-], registrarMovimiento)
+router.post('/registrarmov', validarToken, registrarMovimiento)
 
 
 
@@ -62,5 +57,8 @@ router.get('/listar_mov', validarToken, listarMovimientos)
 router.get('/listar_tipos', validarToken, listarTiposResiduos)
 router.get('/listar_alm', validarToken, listarAlmacenamientos)
 router.get('/buscar/:id', validarToken, buscarResiduoId)
+
+router.get('/listar_admin', validarToken, listarAdmin)
+router.get('/listar_actividad', validarToken, listarActividades)
 
 export default router

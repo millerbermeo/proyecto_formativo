@@ -6,9 +6,9 @@ import { DeleteIcon } from "../datatable_residuos/DeleteIcon";
 import { EyeIcon } from "../datatable_residuos/EyeIcon";
 
 import { PlusIcon } from '../datatable_residuos/PlusIcon';
-import ModalRegisterResiduo from '../residuos/ModalRegisterResiduo';
 import { SearchIcon } from '../datatable_residuos/SearchIcon';
 import axiosClient from '../../axios-client';
+import ModalRegistrarMov from './ModalRegistrarMov';
 
 
 
@@ -91,7 +91,7 @@ function TableMovimientos() {
                     onValueChange={onSearchChange}
                 />
 
-                <ModalRegisterResiduo />
+                <ModalRegistrarMov/>
             </div>
 
 

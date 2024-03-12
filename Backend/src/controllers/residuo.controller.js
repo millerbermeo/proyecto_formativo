@@ -471,3 +471,57 @@ export const listarAlmacenamientos = async (req, res) => {
         return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
     }
 }
+
+
+
+export const listarAdmin = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        let query = `SELECT * FROM usuarios WHERE rol = 'administrador'`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al listar admin', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+
+
+export const listarActividades = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        let query = `SELECT * FROM actividades WHERE estado_actividad = 'asignada'`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al listar actividades', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
