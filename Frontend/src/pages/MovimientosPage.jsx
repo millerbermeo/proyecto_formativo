@@ -1,21 +1,21 @@
 import React from 'react'
 import SidebarComponent from '../components/SidebarComponent'
 import NavbarComponent from '../components/NavbarComponent'
-import DatatableResiduos from '../components/DatatableResiduos'
-import Tabla from '../components/Tabla'
+import TableMovimientos from '../components/mov_components/TableMovimientos'
 
-function DashboardPage() {
+
+function MovimientosPage() {
   return (
     < main className='flex bg-gray-100'>
       <SidebarComponent />
       <div className='flex flex-col w-full'>
         <NavbarComponent />
         <section className='px-6 py-5 pt-20'>
+          <h3 className='py-2'>Movimientos</h3>
           {/* <DatatableResiduos/> */}
-          <Tabla/>
-
-          
+         <TableMovimientos/>
         </section>
+
       </div>
 
 
@@ -23,4 +23,4 @@ function DashboardPage() {
   )
 }
 
-export default DashboardPage
+export default MovimientosPage

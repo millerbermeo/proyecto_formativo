@@ -393,6 +393,33 @@ export const listarResiduo = async (req, res) => {
 
 
 
+
+export const listarMovimientos = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        let query = `SELECT *, u.nombre as user, r.nombre_residuo as residuo, a.nombre_act as actividad, e.nombre_empresa as empresa FROM movimientos m JOIN usuarios u ON m.usuario_adm = u.id_usuario JOIN residuos r ON m.fk_residuo = r.id_residuo JOIN actividades a ON m.fk_actividad = a.id_actividad LEFT JOIN empresas_recoleccion e ON m.destino = e.id_empresa`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al listar residuo', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+
 export const listarTiposResiduos = async (req, res) => {
 
     try {

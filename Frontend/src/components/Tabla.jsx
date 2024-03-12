@@ -21,7 +21,7 @@ function Tabla() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosClient.get('http://localhost:3000/residuo/listar');
+        const response = await axiosClient.get('residuo/listar');
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
