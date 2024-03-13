@@ -25,7 +25,7 @@ function SidebarComponent() {
 
           <div className='flex overflow-hidden w-[210px] items-center justify-center gap-x-4 py-2 -translate-y-3 text-white'>
             <span className='text-white font-black text-3xl'>
-            {<FontAwesomeIcon icon={faC} />}
+              {<FontAwesomeIcon icon={faC} />}
             </span>
             <h2 className='text-xl font-bold text-white'>
               Centro de Acopio
@@ -42,11 +42,15 @@ function SidebarComponent() {
             <span className='absolute -translate-y-8 left-2 2xl:text-xxl'>
               MENU
             </span>
-            <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faTrash} />Residuos</li>
-<Link to="/movimientos">
-<li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faFile} />Movimientos</li>
+            <Link to="/residuos">
+              <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faTrash} />Residuos</li>
 
-</Link>            <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faA} />Actividades</li>
+            </Link>
+
+            <Link to="/movimientos">
+              <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faFile} />Movimientos</li>
+
+            </Link>            <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faA} />Actividades</li>
             <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faUser} />Usuarios</li>
             <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faAlignCenter} />Elementos</li>
           </ul>

@@ -9,6 +9,7 @@ import { PlusIcon } from '../datatable_residuos/PlusIcon';
 import { SearchIcon } from '../datatable_residuos/SearchIcon';
 import axiosClient from '../../axios-client';
 import ModalRegistrarMov from './ModalRegistrarMov';
+import ModalRegistrarSal from './ModalRegistrarSal';
 
 
 
@@ -91,7 +92,10 @@ function TableMovimientos() {
                     onValueChange={onSearchChange}
                 />
 
+                <div className='flex gap-2'>
                 <ModalRegistrarMov/>
+                <ModalRegistrarSal/>
+                </div>
             </div>
 
 

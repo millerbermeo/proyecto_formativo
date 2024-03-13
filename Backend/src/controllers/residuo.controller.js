@@ -119,7 +119,6 @@ export const registrarMovimiento = async (req, res) => {
         await actualizarAlmacenamiento(cantidad, id_alm, "entrada")
         await actualizarActividad(fk_actividad)
 
-
         // Confirmar transacción
         await pool.query('COMMIT');
 
@@ -142,7 +141,7 @@ export const registrarSalida = async (req, res) => {
 
         const rol = req.user.rol;
 
-        const id_residuo = req.params.id
+        // const id_residuo = req.params.id
 
         // Validar autorización del usuario
         if (rol !== 'administrador') {
@@ -151,7 +150,7 @@ export const registrarSalida = async (req, res) => {
         
 
         //variables del body
-        const { destino, usuario_adm } = req.body;
+        const { id_residuo, destino, usuario_adm } = req.body;
 
 
         const errors = validationResult(req);
@@ -522,6 +521,33 @@ export const listarActividades = async (req, res) => {
         }
     } catch (error) {
         console.error('Error en al listar actividades', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+
+
+export const listarEmpresas = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+        let query = `SELECT * FROM empresas_recoleccion`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al listar empresas', error);
         return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
     }
 }

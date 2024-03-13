@@ -5,14 +5,13 @@ import axiosClient from '../../axios-client';
 
 
 
-function ModalRegistrarMov() {
+function ModalRegistrarSal() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const [formData, setFormData] = useState({
         id_residuo: "",
-        cantidad: "",
-        usuario_adm: "",
-        fk_actividad: ""
+        destino: "",
+        usuario_adm: ""
     });
 
     const [data, setData] = useState([]);
@@ -49,7 +48,7 @@ function ModalRegistrarMov() {
     useEffect(() => {
         const fetchData3 = async () => {
             try {
-                const response = await axiosClient.get('http://localhost:3000/residuo/listar_actividad');
+                const response = await axiosClient.get('http://localhost:3000/residuo/listar_empresas');
                 setData3(response.data);
                 console.log("dataaa AAAA", response.data)
             } catch (error) {
@@ -76,7 +75,7 @@ function ModalRegistrarMov() {
             console.log(formData);
 
 
-            await axiosClient.post('http://localhost:3000/residuo/registrarmov', formData).then((response) => {
+            await axiosClient.post('http://localhost:3000/residuo/registrarsalida', formData).then((response) => {
                 if (response.status == 200) {
                     alert(response.data)
                 } else {
@@ -90,7 +89,7 @@ function ModalRegistrarMov() {
 
     return (
         <div className="flex flex-col gap-2">
-            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Movimiento</Button>
+            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Salida</Button>
 
             <Modal
                 isOpen={isOpen}
@@ -100,7 +99,7 @@ function ModalRegistrarMov() {
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Registrar Movimiento
+                                Registrar Salida Residuo
                             </ModalHeader>
                             <ModalBody>
 
@@ -146,10 +145,10 @@ function ModalRegistrarMov() {
 
 
                                 <Select
-                                    label="actividad"
-                                    placeholder="Selecciona una actividad"
-                                    name="fk_actividad" // Cambiar de 'id_actividad' a 'fk_actividad'
-                                    value={formData.fk_actividad}
+                                    label="destino"
+                                    placeholder="Selecciona una empresa"
+                                    name="destino" // Cambiar de 'id_actividad' a 'fk_actividad'
+                                    value={formData.destino}
                                     onChange={handleChange}
                                 >
 
@@ -160,23 +159,15 @@ function ModalRegistrarMov() {
 
 
                                     {data3.map((item, index) => (
-                                        <SelectItem key={item.id_actividad} value={item.id_actividad}>
-                                            {item.nombre_act}
+                                        <SelectItem key={item.id_empresa} value={item.id_empresa}>
+                                            {item.nombre_empresa}
                                         </SelectItem>
                                     ))}
                                 </Select>
 
 
 
-                                <Input
-                                    label="cantidad"
-                                    placeholder="Enter cantidad"
-                                    variant="bordered"
-                                    name="cantidad"
-                                    value={formData.cantidad}
-                                    onChange={handleChange}
-                                />
-
+            
 
 
 
@@ -198,5 +189,4 @@ function ModalRegistrarMov() {
     );
 }
 
-
-export default ModalRegistrarMov
+export default ModalRegistrarSal
