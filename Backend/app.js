@@ -6,7 +6,7 @@ import validator from "./src/routers/validator.router.js"
 // import residuo  from "./src/routers/residuo.router.js"
 
 //ruta para jose
-import actividad  from "./src/routers/actividad.router.js"
+import Actividad  from "./src/routers/actividad.router.js"
 
 //ruta para sebas
 // import elemento  from "./src/routers/elemento.router.js"
@@ -44,7 +44,7 @@ app.use('/', validator);
 
 // app.use('/elemento', elemento) // descomentar aqui va la ruta acceder al controlador de sebas
 
-app.use('/actividades', actividad) // descomentar aqui va la ruta acceder al controlador de jose
+app.use('/actividades', Actividad) // descomentar aqui va la ruta acceder al controlador de jose
 
 app.listen(3000, ()=>{
     console.log("escuchando en el puerto 3000")
