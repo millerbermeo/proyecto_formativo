@@ -1,22 +1,48 @@
 import React, { useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import axiosClient from '../axios-client';
+import { useNavigate } from 'react-router-dom'
 
 function LoginComponent() {
-    const email = useRef();
-    const password = useRef();
-
+    const [emailValue, setEmailValue] = useState('');
+    const [passwordValue, setPasswordValue] = useState('');
     const [tipoInput, setTipoInput] = useState('password');
     const [mostrar, setMostrar] = useState(false);
+    const navigate = useNavigate()
 
     const cambiarTipoInput = () => {
         // Cambia el tipo de input entre 'text' y 'password'
         setTipoInput((tipoAnterior) => (tipoAnterior === 'password' ? 'text' : 'password'));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert();
+
+        const data = {
+            email: emailValue,
+            password: passwordValue
+        };
+        
+        try {
+            const response = await axiosClient.post('/validar', data);
+            console.log(response);
+
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('rol', response.data.rol);
+            localStorage.setItem('nombre', response.data.nombre);
+
+            if (response.data.rol === 'administrador') {
+                navigate('/dashboard');
+            } else {
+ 
+                navigate('/');
+            }
+        } catch (error) {
+      
+            console.error('Error during login:', error);
+            setMostrar(true);
+        }
     };
 
     return (
@@ -24,7 +50,7 @@ function LoginComponent() {
             <div className='2xl:w-[450px] w-[370px] scale-110 -rotate-3 bg-white h-[420px]  2xl:h-[550px] absolute right-40 2xl:right-60 top-1/2 transform -translate-y-1/2 rounded-md'>
                 <div className='2xl:w-[450px] w-[370px] bg-gray-200 h-[420px] 2xl:h-[550px] rotate-3 -translate-y-5 py-16 rounded-md shadow-lg'>
 
-                    <form onSubmit={handleSubmit} className="w-[370px] px-6 rounded flex flex-col justify-center">
+                    <form onSubmit={handleSubmit} className="w-[370px] 2xl:w-[450px] px-6 rounded flex flex-col justify-center">
                         <div className='flex flex-col items-center'>
                             <span className='text-9xl'>
                                 <ion-icon name="people-circle-outline"></ion-icon>
@@ -38,16 +64,17 @@ function LoginComponent() {
                             </label>
                             <input
                                 autoFocus
-                                ref={email}
                                 type="email"
                                 id="email"
-                                className="w-full p-2 px-7 2xl:p-3 border rounded focus:outline-none focus:border-blue-500 placeholder-gray-500 text-sm"
+                                className="w-full p-2 px-7 2xl:p-3 2xl:px-7 border rounded focus:outline-none focus:border-blue-500 placeholder-gray-500 text-sm"
                                 required
                                 placeholder='Enter Email'
+                                value={emailValue}
+                                onChange={(e) => setEmailValue(e.target.value)}
                             />
 
-                            <span className='absolute left-1.5 top-10 text-lg text-gray-800'>
-                            <FontAwesomeIcon icon={faEnvelope} />
+                            <span className='absolute left-1.5 top-10 2xl:top-11 text-lg text-gray-800'>
+                                <FontAwesomeIcon icon={faEnvelope} />
                             </span>
                         </div>
                         <div className="w-full relative">
@@ -55,15 +82,16 @@ function LoginComponent() {
                                 Password
                             </label>
                             <input
-                                ref={password}
                                 type={tipoInput}
                                 id="password"
-                                className="w-full p-2 px-7 2xl:p-3  border rounded focus:outline-none focus:border-blue-500 placeholder-gray-500 text-sm"
+                                className="w-full p-2 px-7 2xl:p-3 2xl:px-7 border rounded focus:outline-none focus:border-blue-500 placeholder-gray-500 text-sm"
                                 required
                                 placeholder='Enter Password'
+                                value={passwordValue}
+                                onChange={(e) => setPasswordValue(e.target.value)}
                             />
-                             <span className='absolute left-1.5 top-10 text-lg text-gray-800'>
-                             <FontAwesomeIcon icon={faLock} />
+                            <span className='absolute left-1.5 top-10 2xl:top-11 text-lg text-gray-800'>
+                                <FontAwesomeIcon icon={faLock} />
                             </span>
                             <label htmlFor="password" onClick={cambiarTipoInput} className='absolute cursor-pointer text-lg top-11 right-3'>
                                 <FontAwesomeIcon icon={tipoInput === 'password' ? faEyeSlash : faEye} />

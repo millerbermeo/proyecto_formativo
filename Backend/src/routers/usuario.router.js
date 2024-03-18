@@ -1,6 +1,4 @@
 //RUTAS ANDERSON
-
-
 import { Router } from "express";
 import { validarToken } from "../controllers/validator.controller.js";
 import { buscarUsuarioPorIdentificacion, desactivarUsuario, editarUsuario, listarUsuarios, registrarUsuario } from "../controllers/usuario.controller.js";
