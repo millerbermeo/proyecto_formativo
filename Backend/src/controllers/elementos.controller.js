@@ -7,7 +7,7 @@ export const listarElementos = async (req, res) => {
         if (rol === 'administrador') {
             // Realizar la consulta para obtener la lista de elementos
             const query = "SELECT * FROM elementos";
-            const result = await pool.query(query);
+            const [result] = await pool.query(query);
 
             if (result.length > 0) {
                 return res.status(200).json(result); 

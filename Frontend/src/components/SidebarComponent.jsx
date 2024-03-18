@@ -50,9 +50,19 @@ function SidebarComponent() {
             <Link to="/movimientos">
               <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faFile} />Movimientos</li>
 
-            </Link>            <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faA} />Actividades</li>
+            </Link>            
+
+            <Link to="/actividades">
+            <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faA} />Actividades</li>
+            </Link>
+
+            <Link to="/usuarios">
             <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faUser} />Usuarios</li>
+
+            </Link>
+            <Link to="/elementos">
             <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faAlignCenter} />Elementos</li>
+            </Link>
           </ul>
 
           <ul className='border-t overflow-hidden border-white mt-28 2xl:mt-36 py-5 border-opacity-50'>
