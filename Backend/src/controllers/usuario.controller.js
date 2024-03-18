@@ -7,18 +7,12 @@ export const registrarUsuario = async (req, res) => {
         const rol = req.user.rol;
         if (rol === 'administrador') {
 
-
             const { nombre, apellidos, identificacion, email, rol, password } = req.body;
             const query = "INSERT INTO usuarios (nombre, apellidos, identificacion, email, rol, password) VALUES (?, ?, ?, ?, ?, ?)";
-           let [result]= await pool.query(query, [nombre, apellidos, identificacion, email, rol, password]);
+            let [result] = await pool.query(query, [nombre, apellidos, identificacion, email, rol, password]);
 
-
-
-
-            if (result.affectedRows>0) {
-
+            if (result.affectedRows > 0) {
                 return res.status(200).json({ 'message': 'Usuario registrado exitosamente' });
-
             } else {
                 return res.status(404).json({ 'message': 'No se encontraron registros de usuarios' }); // se valida si da algun error 
             }
@@ -42,9 +36,11 @@ export const listarUsuarios = async (req, res) => {
         const rol = req.user.rol;
         if (rol === 'administrador') {
             const query = "SELECT * FROM usuarios";
-            const result = await pool.query(query);
+            const [result] = await pool.query(query);
+
             if (result.length > 0) {
                 return res.status(200).json(result);
+
             } else {
                 return res.status(404).json({ 'message': 'No se encontraron registros de usuarios' });
             }
@@ -62,11 +58,15 @@ export const buscarUsuarioPorIdentificacion = async (req, res) => {
     try {
         const rol = req.user.rol;
         if (rol === 'administrador') {
-            const { identificacion } = req.params;
+
+            const identificacion = req.params.id;
+
             const query = "SELECT * FROM usuarios WHERE identificacion = ?";
-            const result = await pool.query(query, [identificacion]);
+
+            const [result] = await pool.query(query, [identificacion]);
+
             if (result.length > 0) {
-                return res.status(200).json(result[0]);
+                return res.status(200).json(result);
             } else {
                 return res.status(404).json({ 'message': 'No se encontró ningún usuario con esa identificación' });
             }
@@ -83,10 +83,16 @@ export const editarUsuario = async (req, res) => {
     try {
         const rol = req.user.rol;
         if (rol === 'administrador') {
-            const { id } = req.params;
+            const id = req.params.id;
+
+            console.log(id)
+
             const { nombre, apellidos, identificacion, email, rol, password } = req.body;
+
             const query = "UPDATE usuarios SET nombre = ?, apellidos = ?, identificacion = ?, email = ?, rol = ?, password = ? WHERE id_usuario = ?";
-            const result = await pool.query(query, [nombre, apellidos, identificacion, email, rol, password, id]);
+
+            const [result] = await pool.query(query, [nombre, apellidos, identificacion, email, rol, password, id]);
+
             if (result.affectedRows > 0) {
                 return res.status(200).json({ 'message': 'Usuario actualizado exitosamente' });
             } else {
@@ -105,9 +111,9 @@ export const desactivarUsuario = async (req, res) => {
     try {
         const rol = req.user.rol;
         if (rol === 'administrador') {
-            const { id } = req.params;
+            const  id = req.params.id;
             const query = "UPDATE usuarios SET estado = 'inactivo' WHERE id_usuario = ?";
-            const result = await pool.query(query, [id]);
+            const [result] = await pool.query(query, [id]);
             if (result.affectedRows > 0) {
                 return res.status(200).json({ 'message': 'Usuario desactivado exitosamente' });
             } else {

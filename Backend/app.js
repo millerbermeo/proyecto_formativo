@@ -3,16 +3,19 @@ import bodyParser from "body-parser";
 import cors from "cors"
 import {pool} from "./src/database/conexion.js";
 import validator from "./src/routers/validator.router.js"
-// import residuo  from "./src/routers/residuo.router.js"
+import residuo  from "./src/routers/residuo.router.js"
 
 //ruta para jose
-// import actividad  from "./src/routers/actividad.router.js"
+import Actividad  from "./src/routers/actividad.router.js"
 
 //ruta para sebas
-// import elemento  from "./src/routers/elemento.router.js"
+import elemento  from "./src/routers/elemento.router.js"
 
 //ruta para ander
+
  import usuarios  from "./src/routers/usuario.router.js"
+
+
 
 
 const app = express()
@@ -40,11 +43,11 @@ app.use('/', validator);
 
 app.use('/usuario', usuarios) // descomentar aqui va la ruta acceder al controlador de ander
 
-// app.use('/residuo', residuo) // descomentar aqui va la ruta acceder al controlador de miller
+app.use('/residuo', residuo) // descomentar aqui va la ruta acceder al controlador de miller
 
-// app.use('/elemento', elemento) // descomentar aqui va la ruta acceder al controlador de sebas
+app.use('/elemento', elemento) // descomentar aqui va la ruta acceder al controlador de sebas
 
-// app.use('/actividad', actividad) // descomentar aqui va la ruta acceder al controlador de jose
+app.use('/actividades', Actividad) // descomentar aqui va la ruta acceder al controlador de jose
 
 app.listen(3000, ()=>{
     console.log("escuchando en el puerto 3000")
