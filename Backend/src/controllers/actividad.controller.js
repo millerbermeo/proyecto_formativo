@@ -41,33 +41,42 @@ export const agregarActividad = async (req, res) => {
         res.status(500).json({ success: false, 'message': 'Error interno del servidor'});
     }
 };
-export const estadoActividad = async (req, res) => {
-    try {
-        const { id_actividad, nuevo_estado } = req.body;
+    export const actividadTerminada = async (req, res) => {
+        try {
+            const { rol } = req.usesr;
 
-        // Verificar si todos los datos necesarios están presentes
-        if (!id_actividad || !nuevo_estado) {
-            return res.status(400).json({ 'message': 'Faltan datos obligatorios para cambiar el estado de la actividad' });
+            if (rol ==='administrador') {
+                let id = req.params.id
+                let sql = `UPDATE actividades SET  estado_actividad = 'terminada' WHERE id_actividad = ${id} `
+
+                await pool.query(sql)
+                res.status(200).json({success: true, message: 'EstadoActualizado.'});
+            } else {
+                return res.status(403).json({'message': 'Error: usuario no autorizado'});
+            }
+        } catch (error) {
+            console.error("Error actualizar estado:", error);
+            res.status(500).json({ success: false,'message': 'Error interno del servidor'});
         }
+    };
 
-        // Verificar si el nuevo estado es válido (En Proceso o Terminada)
-        if (nuevo_estado !== 'En Proceso' && nuevo_estado !== 'Terminada') {
-            return res.status(400).json({ 'message': 'El nuevo estado debe ser "En Proceso" o "Terminada"' });
+    export const actividadListarId = async (req, res) => {
+        try {
+            const { rol } = req.user;
+            if (rol ==='administrador') {
+                let id = req.params.id
+                const query = 'SELECT * from actividades WHERE id_actividad = ?'
+                const [result] = await pool.query(query, [id])
+
+                if (result.legth > 0){
+                    return res.status(200).json(result);
+                } else {
+                    return res.status(403).json({'message': `No se encontraron registros de actividades con el id ${id}`});
+                }
+            } else {
+                return res.status(403).json({'message': 'Error: usuario no autorizado'});
+            }
+        } catch (error) {
+            return res.status(500).json({'message': 'Error: ' + e})
         }
-
-        // Actualizar el estado de la actividad
-        const result = await pool.query(
-            "UPDATE actividades SET estado_actividad = ? WHERE id_actividad = ?",
-            [nuevo_estado, id_actividad]
-        );
-
-        // Verificar la actividad y se actualizó correctamente
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ 'message': 'No se encontró ninguna actividad con el ID proporcionado' });
-        }
-
-        return res.status(200).json({ 'message': 'Estado de la actividad actualizado correctamente' });
-    } catch (e) {
-        return res.status(500).json({ 'message': 'Error: ' + e });
-    }
-};
+    };
