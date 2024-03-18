@@ -2,30 +2,43 @@ import { pool } from "../database/conexion.js";
 
 export const agregarActividad = async (req, res) => {
     try {
-        const rol = req.user.rol;
+
+        const {rol}  = req.user;
 
         // Verificar si el usuario tiene el rol de administrador
         if (rol === 'administrador') {
-            const { id_tipo_actividad, nombre_actividad, descripcion_actividad } = req.body;
+            
+            const { tipo_actividad, nombre_act, estado_actividad, lugar_actividad, fecha_actividad, usuarios } = req.body;
 
-            // Verificar si todos los datos necesarios están presentes
-            if (!id_tipo_actividad || !nombre_actividad || !descripcion_actividad) {
-                return res.status(400).json({ 'message': 'Faltan datos obligatorios para la actividad' });
-            }
-
-            // Insertar la nueva actividad en la base de datos
-            const result = await pool.query(
-                "INSERT INTO tu_tabla (id_tipo_actividad, nombre_actividad, descripcion_actividad) VALUES (?, ?, ?)",
-                [id_tipo_actividad, nombre_actividad, descripcion_actividad]
+        //Iniciar Transaccion
+           await pool.query('START TRANSACTION')
+           
+           //Insertar la actividad
+            const [actividadResult] = await pool.query(
+                'INSERT INTO actividades (tipo_actividad, nombre_act, estado_actividad, lugar_actividad, fecha_actividad) VALUES (?, ?, ?, ?, ?)',
+                [tipo_actividad, nombre_act, estado_actividad, lugar_actividad, fecha_actividad]
             );
 
-            // Devolver la actividad recién creada
-            return res.status(201).json({ 'message': 'Actividad creada satisfactoriamente', 'data': result });
-        } else {
-            return res.status(403).json({ 'message': 'Error: usuario no autorizado' });
-        }
-    } catch (e) {
-        return res.status(500).json({ 'message': 'Error: ' + e });
+            const id_actividad = actividadResult.insertId;
+
+            //Insertar usuarios de manera sincronica
+
+            for (const id_usuario of usuarios){
+                await pool.query('INSERT INTO usuarios_actividades (fk_usuario, fk_actividad) VALUES (?, ?)', [id_usuario, id_actividad]);
+            }
+
+            //confirmar
+            await pool.query('COMMIT');
+
+            res.status(201).json({success: true, message: 'actividad con usuarios terminada con exito'});
+        } 
+    } catch (error) {
+
+        //Revertir en caso de error 
+        await pool.query('ROLLBACK');
+
+        console.error('Error al insertar actividad con usuarios:', error);
+        res.status(500).json({ success: false, 'message': 'Error interno del servidor'});
     }
 };
 export const estadoActividad = async (req, res) => {

@@ -4,7 +4,7 @@ import { agregarActividad, estadoActividad } from "../controllers/actividad.cont
 const router = express.Router();
 
 // Agregar una nueva actividad
-router.post("/actividades", agregarActividad);
+router.post("/actividad", agregarActividad);
 router.post("/actividades/estado", estadoActividad);
 
 export default router;
