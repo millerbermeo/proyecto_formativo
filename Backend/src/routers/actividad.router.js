@@ -6,6 +6,6 @@ const router = express.Router();
 
 // Agregar una nueva actividad
 router.post("/registrar", validarToken, agregarActividad);
-router.put("/actualizarActividad", validarToken, actividadTerminada);
+router.put("/actualizar/:id", validarToken, actividadTerminada);
 
 export default router;

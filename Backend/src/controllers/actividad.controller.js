@@ -41,20 +41,20 @@ export const agregarActividad = async (req, res) => {
 };
     export const actividadTerminada = async (req, res) => {
         try {
-            const { rol } = req.usesr;
+            const { rol } = req.user;
 
             if (rol ==='administrador') {
                 let id = req.params.id
                 let sql = `UPDATE actividades SET  estado_actividad = 'terminada' WHERE id_actividad = ${id} `
 
                 await pool.query(sql)
-                res.status(200).json({success: true, message: 'EstadoActualizado.'});
+                res.status(200).json({success: true, message: 'Estado Actualizado.'});
             } else {
                 return res.status(403).json({'message': 'Error: usuario no autorizado'});
             }
         } catch (error) {
             console.error("Error actualizar estado:", error);
-            res.status(500).json({ success: false,'message': 'Error interno del servidor'});
+            res.status(500).json({ success: false,'message': 'Error interno del servidor' + error});
         }
     };
 
