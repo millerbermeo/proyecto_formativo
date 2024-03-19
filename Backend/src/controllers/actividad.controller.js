@@ -8,24 +8,22 @@ export const agregarActividad = async (req, res) => {
         // Verificar si el usuario tiene el rol de administrador
         if (rol === 'administrador') {
             
-            const { tipo_actividad, nombre_act, estado_actividad, lugar_actividad, fecha_actividad, usuarios } = req.body;
+            const { tipo_actividad, nombre_act, lugar_actividad, fecha_actividad } = req.body;
 
         //Iniciar Transaccion
            await pool.query('START TRANSACTION')
            
            //Insertar la actividad
             const [actividadResult] = await pool.query(
-                'INSERT INTO actividades (tipo_actividad, nombre_act, estado_actividad, lugar_actividad, fecha_actividad) VALUES (?, ?, ?, ?, ?)',
-                [tipo_actividad, nombre_act, estado_actividad, lugar_actividad, fecha_actividad]
+                'INSERT INTO actividades (tipo_actividad, nombre_act, lugar_actividad, fecha_actividad) VALUES (?, ?, ?, ?)',
+                [tipo_actividad, nombre_act,lugar_actividad, fecha_actividad]
             );
 
             const id_actividad = actividadResult.insertId;
 
             //Insertar usuarios de manera sincronica
 
-            for (const id_usuario of usuarios){
-                await pool.query('INSERT INTO usuarios_actividades (fk_usuario, fk_actividad) VALUES (?, ?)', [id_usuario, id_actividad]);
-            }
+
 
             //confirmar
             await pool.query('COMMIT');
@@ -38,7 +36,7 @@ export const agregarActividad = async (req, res) => {
         await pool.query('ROLLBACK');
 
         console.error('Error al insertar actividad con usuarios:', error);
-        res.status(500).json({ success: false, 'message': 'Error interno del servidor'});
+        res.status(500).json({ success: false, 'message': 'Error interno del servidor' + error});
     }
 };
     export const actividadTerminada = async (req, res) => {
