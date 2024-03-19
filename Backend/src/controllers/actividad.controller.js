@@ -103,5 +103,26 @@ export const agregarActividad = async (req, res) => {
             return res.status(500).json({ 'message': 'Error: ' + e });
         }
     };
-
+    export const actividadActualizar = async (req, res) => {
+        try {
+            const { rol } = req.user;
+    
+            if (rol === 'administrador') {
+                const id_actividad = req.params.id;
+                const { nombre_act, estado_actividad, lugar_actividad, fecha_actividad } = req.body;
+    
+                const sql = `UPDATE actividades SET nombre_act = ?, estado_actividad = ?, lugar_actividad = ?, fecha_actividad = ? WHERE id_actividad = ?`;
+    
+                await pool.query(sql, [nombre_act, estado_actividad, lugar_actividad, fecha_actividad, id_actividad]);
+    
+                res.status(200).json({ success: true, message: 'Actividad Actualizada.' });
+            } else {
+                return res.status(403).json({ message: 'Error: usuario no autorizado' });
+            }
+        } catch (error) {
+            console.error("Error actualizar actividad:", error);
+            res.status(500).json({ success: false, message: "Error interno del servidor." });
+        }
+    };
+    
     
