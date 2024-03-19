@@ -63,7 +63,10 @@ export const agregarActividad = async (req, res) => {
             const { rol } = req.user;
             if (rol ==='administrador') {
                 const id_actividad = req.params.id;
-                const query = `SELECT * FROM actividades WHERE id_actividad = ?`;
+                const query = `select actividades.*,
+                areas.nombre_area AS nombre_lugar
+                from actividades
+                join areas on areas.id_lugar = actividades.lugar_actividad WHERE id_actividad = ?`;
                 const [result] = await pool.query(query, [id_actividad])
 
                 if (result.length > 0){
@@ -86,7 +89,12 @@ export const agregarActividad = async (req, res) => {
     
             if (rol === 'administrador') {
     
-                let query = "SELECT * from actividades"
+                let query = `select actividades.*,
+                areas.nombre_area AS nombre_lugar
+                from actividades
+                join areas on areas.id_lugar = actividades.lugar_actividad`;
+
+
     
                 let [result] = await pool.query(query)
     
