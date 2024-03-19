@@ -62,14 +62,14 @@ export const agregarActividad = async (req, res) => {
         try {
             const { rol } = req.user;
             if (rol ==='administrador') {
-                let id = req.params.id
-                const query = 'SELECT * from actividades WHERE id_actividad = ?'
-                const [result] = await pool.query(query, [id])
+                const id_actividad = req.params.id;
+                const query = `SELECT * FROM actividades WHERE id_actividad = ?`;
+                const [result] = await pool.query(query, [id_actividad])
 
-                if (result.legth > 0){
+                if (result.length > 0){
                     return res.status(200).json(result);
                 } else {
-                    return res.status(403).json({'message': `No se encontraron registros de actividades con el id ${id}`});
+                    return res.status(403).json({'message': `No se encontraron registros de actividades con el id ${id_actividad}`});
                 }
             } else {
                 return res.status(403).json({'message': 'Error: usuario no autorizado'});
@@ -78,3 +78,30 @@ export const agregarActividad = async (req, res) => {
             return res.status(500).json({'message': 'Error: ' + e})
         }
     };
+
+    export const actividadListar = async (req, res) => {
+
+        try {
+            const { rol } = req.user;
+    
+            if (rol === 'administrador') {
+    
+                let query = "SELECT * from actividades"
+    
+                let [result] = await pool.query(query)
+    
+                if (result.length > 0) {
+                    return res.status(200).json(result);
+                } else {
+                    return res.status(404).json({ 'message': 'No se encontraron registros de actividades' });
+                }
+    
+            } else {
+                return res.status(403).json({ 'message': 'Error: usuario no autorizado' });
+            }
+        } catch (e) {
+            return res.status(500).json({ 'message': 'Error: ' + e });
+        }
+    };
+
+    
