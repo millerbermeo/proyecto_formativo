@@ -1,32 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Button, Input, User, Chip, Tooltip, getKeyValue } from "@nextui-org/react";
 import { SearchIcon } from './datatable_residuos/SearchIcon';
-import { EditIcon } from ".//datatable_residuos/EditIcon";
-import { DeleteIcon } from "./datatable_residuos/DeleteIcon";
+import { EditIcon } from "./icons/EditIcon";
+import { DeleteIcon } from "./icons/DeleteIcon";
 import { EyeIcon } from "./datatable_residuos/EyeIcon";
 import axiosClient from '../axios-client';
 import { PlusIcon } from './datatable_residuos/PlusIcon';
 import ModalRegisterResiduo from './residuos/ModalRegisterResiduo';
+import ModalActualizarResiduos from './residuos/ModalActualizarResiduos';
+import ModalRegistrarSal2 from './mov_components/ModalRegistrarSal2';
 
 
 
 
-function Tabla() {
+function TablaResiduos() {
   const [data, setData] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [filterValue, setFilterValue] = useState('');
 
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosClient.get('residuo/listar');
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosClient.get('residuo/listar');
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
 
     fetchData();
   }, []);
@@ -78,17 +82,18 @@ function Tabla() {
   return (
     <>
       <div className='flex justify-between items-center w-full'>
-      <Input
-        isClearable
-        className="w-full sm:max-w-[44%]"
-        placeholder="Search by name..."
-        startContent={<SearchIcon />}
-        value={filterValue}
-        onClear={() => onClear()}
-        onValueChange={onSearchChange}
-      />
+        <Input
+          isClearable
+          className="w-full sm:max-w-[44%]"
+          placeholder="Search by name..."
+          startContent={<SearchIcon />}
+          value={filterValue}
+          onClear={() => onClear()}
+          onValueChange={onSearchChange}
+        />
 
-<ModalRegisterResiduo/>
+        <ModalRegisterResiduo fetchData={fetchData} />
+
       </div>
 
 
@@ -102,7 +107,7 @@ function Tabla() {
             onChange={onRowsPerPageChange}
           >
             <option value="5">5</option>
-            <option  value="10">10</option>
+            <option value="10">10</option>
             <option value="15">15</option>
           </select>
         </label>
@@ -117,7 +122,7 @@ function Tabla() {
           <TableColumn>CANTIDAD</TableColumn>
           <TableColumn>UNIDAD MEDIDA</TableColumn>
           <TableColumn>ALMACENAMIENTO</TableColumn>
-          <TableColumn>ACCIONES</TableColumn>
+          <TableColumn className='flex justify-center items-center'>ACCIONES</TableColumn>
         </TableHeader>
         <TableBody>
           {paginatedData.map(item => (
@@ -129,9 +134,9 @@ function Tabla() {
               <TableCell>{item.cantidad}</TableCell>
               <TableCell>{item.unidad_medida}</TableCell>
               <TableCell>{item.alm}</TableCell>
-              <TableCell>  
+              <TableCell className='flex justify-center gap-2'>
 
-              <div className="relative flex items-center gap-2">
+                {/* <div className="relative flex items-center gap-2">
             <Tooltip content="Details">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EyeIcon />
@@ -147,8 +152,15 @@ function Tabla() {
                 <DeleteIcon />
               </span>
             </Tooltip>
-          </div>
+          </div> */}
+
+                <ModalActualizarResiduos residuos={item} fetchData={fetchData} />
+                <ModalRegistrarSal2 residuos={item} fetchData={fetchData} />
+
               </TableCell>
+
+
+
             </TableRow>
           ))}
         </TableBody>
@@ -177,4 +189,4 @@ function Tabla() {
   );
 }
 
-export default Tabla;
+export default TablaResiduos;

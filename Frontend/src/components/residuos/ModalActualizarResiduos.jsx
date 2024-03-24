@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, Select, SelectItem, Input, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
-import { PlusIcon } from "../PlusIcon";
 import axiosClient from '../../axios-client';
+import { EditIcon } from '../icons/EditIcon';
 
-function ModalRegisterResiduo({ fetchData }) {
-
+function ModalActualizarResiduos({ fetchData, residuos }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
     const [formData, setFormData] = useState({
         nombre_residuo: "",
         residuo: "",
@@ -19,6 +17,18 @@ function ModalRegisterResiduo({ fetchData }) {
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
 
+
+    let id = residuos.id_residuo
+    let nombre_residuo = residuos.nombre_residuo
+    let residuo = residuos.residuo
+    let tipo_residuo = residuos.tipo_residuo
+    let cantidad = residuos.cantidad
+
+    let unidad_medida = residuos.unidad_medida
+    let fk_alm = residuos.fk_alm
+
+
+
     useEffect(() => {
         const fetchData1 = async () => {
             try {
@@ -28,7 +38,6 @@ function ModalRegisterResiduo({ fetchData }) {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData1();
     }, []);
 
@@ -41,7 +50,6 @@ function ModalRegisterResiduo({ fetchData }) {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData2();
     }, []);
 
@@ -55,36 +63,32 @@ function ModalRegisterResiduo({ fetchData }) {
 
     const handleSubmit = async () => {
         try {
-            // Aquí puedes enviar los datos a tu backend utilizando axios o fetch
             console.log(formData);
-            await axiosClient.post('http://localhost:3000/residuo/registrar', formData).then((response) => {
-                if (response.status == 200) {
-                    alert(response.data)
-                } else {
-                    alert(response.data)
-                }
+            alert("Datos actualizados correctamente");
+
+            await axiosClient.put(`http://localhost:3000/residuo/actualizar/${id}`, formData).then((response) => {
+
 
                 fetchData()
             })
+
+            onOpenChange(false);
         } catch (error) {
             console.error('Error submitting data:', error);
+            onOpenChange(false);
         }
     };
 
     return (
         <div className="flex flex-col gap-2">
-            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Registrar</Button>
+            <Button color="" className='w-10 text-blue-600' onPress={onOpen}>   <EditIcon /></Button>
+            
 
-            <Modal
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-            >
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">
-                                Registrar Residuo
-                            </ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">Actualizar</ModalHeader>
                             <ModalBody>
                                 <Input
                                     autoFocus
@@ -92,7 +96,7 @@ function ModalRegisterResiduo({ fetchData }) {
                                     placeholder="Enter nombre"
                                     variant="bordered"
                                     name="nombre_residuo"
-                                    value={formData.nombre_residuo}
+                                    value={formData.nombre_residuo || nombre_residuo}
                                     onChange={handleChange}
                                 />
                                 <Select
@@ -110,13 +114,11 @@ function ModalRegisterResiduo({ fetchData }) {
                                     </SelectItem>
                                 </Select>
 
-
-
                                 <Select
                                     label="Tipo Residuo"
                                     placeholder="Selecciona un Residuo"
                                     name="tipo_residuo"
-                                    value={formData.tipo_residuo}
+                                    value={formData.tipo_residuo || tipo_residuo}
                                     onChange={handleChange}
                                 >
                                     {data.map((item, index) => (
@@ -128,11 +130,11 @@ function ModalRegisterResiduo({ fetchData }) {
 
                                 <Input
                                     autoFocus
-                                    label="cantidad"
+                                    label="Cantidad"
                                     placeholder="Enter cantidad"
                                     variant="bordered"
                                     name="cantidad"
-                                    value={formData.cantidad}
+                                    value={formData.cantidad || cantidad}
                                     onChange={handleChange}
                                 />
 
@@ -160,12 +162,11 @@ function ModalRegisterResiduo({ fetchData }) {
                                     </SelectItem>
                                 </Select>
 
-
                                 <Select
                                     label="Almacenamiento"
                                     placeholder="Selecciona un almacenamiento"
                                     name="fk_alm"
-                                    value={formData.fk_alm}
+                                    value={formData.fk_alm || fk_alm}
                                     onChange={handleChange}
                                 >
                                     {data2.map((item, index) => (
@@ -176,12 +177,8 @@ function ModalRegisterResiduo({ fetchData }) {
                                 </Select>
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="danger" variant="light" onPress={onClose}>
-                                    Cerrar
-                                </Button>
-                                <Button color="primary" onClick={handleSubmit} onPress={onClose}>
-                                    Registrar
-                                </Button>
+                                <Button color="danger" variant="light" onPress={onClose}>Cerrar</Button>
+                                <Button color="primary" onClick={handleSubmit} onPress={onClose}>Actualizar</Button>
                             </ModalFooter>
                         </>
                     )}
@@ -191,4 +188,4 @@ function ModalRegisterResiduo({ fetchData }) {
     );
 }
 
-export default ModalRegisterResiduo;
+export default ModalActualizarResiduos;

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Button, Input, User, Chip, Tooltip, getKeyValue } from "@nextui-org/react";
 
-import { EditIcon } from "../datatable_residuos/EditIcon";
-import { DeleteIcon } from "../datatable_residuos/DeleteIcon";
-import { EyeIcon } from "../datatable_residuos/EyeIcon";
+
 
 import { PlusIcon } from '../datatable_residuos/PlusIcon';
 import { SearchIcon } from '../datatable_residuos/SearchIcon';
 import axiosClient from '../../axios-client';
 import ModalRegistrarMov from './ModalRegistrarMov';
+import ModalRegistrarSal from './ModalRegistrarSal';
 
 
 
@@ -20,17 +19,17 @@ function TableMovimientos() {
     const [page, setPage] = useState(1);
     const [filterValue, setFilterValue] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axiosClient.get('residuo/listar_mov');
-                setData(response.data);
-                console.log("mov", response.data)
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
 
+    const fetchData = async () => {
+        try {
+            const response = await axiosClient.get('residuo/listar_mov');
+            setData(response.data);
+            console.log("mov", response.data)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -91,7 +90,10 @@ function TableMovimientos() {
                     onValueChange={onSearchChange}
                 />
 
-                <ModalRegistrarMov/>
+                <div className='flex justify-center items-center gap-x-4'> 
+                <ModalRegistrarMov fetchData={fetchData}/>
+                <ModalRegistrarSal fetchData={fetchData}/>
+                </div>
             </div>
 
 
@@ -127,14 +129,14 @@ function TableMovimientos() {
                         <TableRow key={item.id_movimiento}>
                             <TableCell>{item.id_movimiento}</TableCell>
                             <TableCell>{item.tipo_movimiento}</TableCell>
-                            <TableCell>{item.cantidad}</TableCell>
+                            <TableCell>{item.cantidad_total}</TableCell>
                             <TableCell>{item.fecha}</TableCell>
                             <TableCell>{item.user}</TableCell>
                             <TableCell>{item.residuo}</TableCell>
                             <TableCell>{item.actividad}</TableCell>
 
                             <TableCell>
-{/* 
+                                {/* 
                                 <div className="relative flex items-center gap-2">
                                     <Tooltip content="Details">
                                         <span className="text-lg text-default-400 cursor-pointer active:opacity-50">

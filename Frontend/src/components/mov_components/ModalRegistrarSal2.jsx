@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, Select, SelectItem, Input, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { PlusIcon } from '../PlusIcon';
 import axiosClient from '../../axios-client';
+import { DeleteIcon } from '../icons/DeleteIcon';
 
 
 
-function ModalRegistrarMov({fetchData}) {
+function ModalRegistrarSal2({ fetchData, residuos }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const [formData, setFormData] = useState({
         id_residuo: "",
-        cantidad: "",
         usuario_adm: "",
-        fk_actividad: ""
+        destino: ""
     });
+
+    let id = residuos.id_residuo
 
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
@@ -49,7 +51,7 @@ function ModalRegistrarMov({fetchData}) {
     useEffect(() => {
         const fetchData3 = async () => {
             try {
-                const response = await axiosClient.get('http://localhost:3000/residuo/listar_actividad');
+                const response = await axiosClient.get('http://localhost:3000/residuo/listar_empresas');
                 setData3(response.data);
                 console.log("dataaa AAAA", response.data)
             } catch (error) {
@@ -74,13 +76,9 @@ function ModalRegistrarMov({fetchData}) {
         try {
             // Aquí puedes enviar los datos a tu backend utilizando axios o fetch
             console.log(formData);
-            await axiosClient.post('http://localhost:3000/residuo/registrarmov', formData).then((response) => {
-                if (response.status == 200) {
-                    alert(response.data)
-                } else {
-                    alert(response.data)
-                }
-
+            console.log("aaaaaaaaa", id)
+            await axiosClient.post('http://localhost:3000/residuo/registrarsalida', formData).then((response) => {
+                console.log(response.data)
                 fetchData()
             })
         } catch (error) {
@@ -90,7 +88,7 @@ function ModalRegistrarMov({fetchData}) {
 
     return (
         <div className="flex flex-col gap-2">
-            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Registrar Entrada</Button>
+            <Button color="" className='w-10' onPress={onOpen}><DeleteIcon /></Button>
 
             <Modal
                 isOpen={isOpen}
@@ -103,20 +101,18 @@ function ModalRegistrarMov({fetchData}) {
                                 Registrar Movimiento
                             </ModalHeader>
                             <ModalBody>
-                                <Select
-                                    autoFocus
+
+
+                                <Input
                                     label="Residuo"
                                     placeholder="Selecciona un Residuo"
                                     name="id_residuo"
-                                    value={formData.id_residuo}
+                                    variant="bordered"
+                                    value={id}
+                                    defaultValue={id}
                                     onChange={handleChange}
-                                >
-                                    {data2.map((item, index) => (
-                                        <SelectItem key={item.id_residuo} value={item.id_residuo}>
-                                            {item.nombre_residuo}
-                                        </SelectItem>
-                                    ))}
-                                </Select>
+                                />
+
 
                                 <Select
                                     label="Adminstrador"
@@ -134,35 +130,27 @@ function ModalRegistrarMov({fetchData}) {
 
 
                                 <Select
-                                    label="actividad"
-                                    placeholder="Selecciona una actividad"
-                                    name="fk_actividad"
-                                    value={formData.fk_actividad}
+                                    label="destino"
+                                    placeholder="Selecciona una Empresa"
+                                    name="destino"
+                                    value={formData.destino}
                                     onChange={handleChange}
-                                    disabled={!data3.length} // Deshabilita el menú desplegable si no hay actividades disponibles
                                 >
-                                    {data3.length ? ( // Verifica si hay actividades disponibles
-                                        data3.map((item, index) => (
-                                            <SelectItem key={item.id_actividad} value={item.id_actividad}>
-                                                {item.nombre_act}
-                                            </SelectItem>
-                                        ))
-                                    ) : (
-                                        // Si no hay actividades, muestra un mensaje
-                                        <SelectItem disabled>
-                                            No hay actividades disponibles
+                                    {data3.map((item, index) => (
+                                        <SelectItem key={item.id_empresa} value={item.id_empresa}>
+                                            {item.nombre_empresa}
                                         </SelectItem>
-                                    )}
+                                    ))}
                                 </Select>
-                                                              
-                                <Input
+
+                                {/* <Input
                                     label="cantidad"
                                     placeholder="Enter cantidad"
                                     variant="bordered"
                                     name="cantidad"
                                     value={formData.cantidad}
                                     onChange={handleChange}
-                                />
+                                /> */}
 
 
 
@@ -186,4 +174,5 @@ function ModalRegistrarMov({fetchData}) {
 }
 
 
-export default ModalRegistrarMov
+
+export default ModalRegistrarSal2

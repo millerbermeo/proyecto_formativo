@@ -10,8 +10,8 @@ function MovimientosPage() {
       <SidebarComponent />
       <div className='flex flex-col w-full'>
         <NavbarComponent />
-        <section className='px-6 py-5 pt-20'>
-          <h3 className='py-2'>Movimientos</h3>
+        <section className='px-6 py-5 pt-10'>
+ 
           {/* <DatatableResiduos/> */}
          <TableMovimientos/>
         </section>

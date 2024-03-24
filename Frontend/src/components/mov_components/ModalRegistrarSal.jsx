@@ -5,14 +5,13 @@ import axiosClient from '../../axios-client';
 
 
 
-function ModalRegistrarMov({fetchData}) {
+function ModalRegistrarSal({fetchData}) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const [formData, setFormData] = useState({
         id_residuo: "",
-        cantidad: "",
         usuario_adm: "",
-        fk_actividad: ""
+        destino: ""
     });
 
     const [data, setData] = useState([]);
@@ -49,7 +48,7 @@ function ModalRegistrarMov({fetchData}) {
     useEffect(() => {
         const fetchData3 = async () => {
             try {
-                const response = await axiosClient.get('http://localhost:3000/residuo/listar_actividad');
+                const response = await axiosClient.get('http://localhost:3000/residuo/listar_empresas');
                 setData3(response.data);
                 console.log("dataaa AAAA", response.data)
             } catch (error) {
@@ -74,7 +73,7 @@ function ModalRegistrarMov({fetchData}) {
         try {
             // Aquí puedes enviar los datos a tu backend utilizando axios o fetch
             console.log(formData);
-            await axiosClient.post('http://localhost:3000/residuo/registrarmov', formData).then((response) => {
+            await axiosClient.post('http://localhost:3000/residuo/registrarsalida', formData).then((response) => {
                 if (response.status == 200) {
                     alert(response.data)
                 } else {
@@ -90,7 +89,7 @@ function ModalRegistrarMov({fetchData}) {
 
     return (
         <div className="flex flex-col gap-2">
-            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Registrar Entrada</Button>
+            <Button color="default" endContent={<PlusIcon />} onPress={onOpen}>Registrar Salida</Button>
 
             <Modal
                 isOpen={isOpen}
@@ -134,35 +133,27 @@ function ModalRegistrarMov({fetchData}) {
 
 
                                 <Select
-                                    label="actividad"
-                                    placeholder="Selecciona una actividad"
-                                    name="fk_actividad"
-                                    value={formData.fk_actividad}
+                                    label="destino"
+                                    placeholder="Selecciona una Empresa"
+                                    name="destino"
+                                    value={formData.destino}
                                     onChange={handleChange}
-                                    disabled={!data3.length} // Deshabilita el menú desplegable si no hay actividades disponibles
                                 >
-                                    {data3.length ? ( // Verifica si hay actividades disponibles
-                                        data3.map((item, index) => (
-                                            <SelectItem key={item.id_actividad} value={item.id_actividad}>
-                                                {item.nombre_act}
-                                            </SelectItem>
-                                        ))
-                                    ) : (
-                                        // Si no hay actividades, muestra un mensaje
-                                        <SelectItem disabled>
-                                            No hay actividades disponibles
+                                    {data3.map((item, index) => (
+                                        <SelectItem key={item.id_empresa} value={item.id_empresa}>
+                                            {item.nombre_empresa}
                                         </SelectItem>
-                                    )}
+                                    ))}
                                 </Select>
                                                               
-                                <Input
+                                {/* <Input
                                     label="cantidad"
                                     placeholder="Enter cantidad"
                                     variant="bordered"
                                     name="cantidad"
                                     value={formData.cantidad}
                                     onChange={handleChange}
-                                />
+                                /> */}
 
 
 
@@ -186,4 +177,5 @@ function ModalRegistrarMov({fetchData}) {
 }
 
 
-export default ModalRegistrarMov
+
+export default ModalRegistrarSal

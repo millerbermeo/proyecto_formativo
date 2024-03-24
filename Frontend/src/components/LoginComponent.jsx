@@ -33,7 +33,7 @@ function LoginComponent() {
             localStorage.setItem('nombre', response.data.nombre);
 
             if (response.data.rol === 'administrador') {
-                navigate('/dashboard');
+                navigate('/residuos');
             } else {
  
                 navigate('/');
