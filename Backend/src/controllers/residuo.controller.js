@@ -112,11 +112,13 @@ export const registrarMovimiento = async (req, res) => {
         let id_alm = await obtenerAlmacenamientoId(id_residuo);
         console.log(id_alm);
 
+
         // Realizar todas las operaciones dentro de la transacción
         await actualizarCantidadResiduo(cantidad, id_residuo, "entrada");
         await registrarMovSql(cantidad, usuario_adm, id_residuo, fk_actividad);
         await actualizarAlmacenamiento(cantidad, id_alm, "entrada");
         await actualizarActividad(fk_actividad);
+
 
         // Confirmar transacción
         await pool.query('COMMIT');
@@ -145,7 +147,6 @@ export const registrarSalida = async (req, res) => {
 
         const rol = req.user.rol;
 
-        // const  = req.params.id
 
         // Validar autorización del usuario
         if (rol !== 'administrador') {
@@ -568,6 +569,7 @@ export const listarEmpresas = async (req, res) => {
         let [result] = await pool.query(query)
 
         if (result.length > 0) {
+
             
             res.status(HTTP_STATUS.ok).json(result)
 
@@ -580,3 +582,5 @@ export const listarEmpresas = async (req, res) => {
         return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
     }
 }
+
+

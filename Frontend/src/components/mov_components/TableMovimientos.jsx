@@ -90,10 +90,12 @@ function TableMovimientos() {
                     onValueChange={onSearchChange}
                 />
 
+
                 <div className='flex justify-center items-center gap-x-4'> 
                 <ModalRegistrarMov fetchData={fetchData}/>
                 <ModalRegistrarSal fetchData={fetchData}/>
-                </div>
+</div>
+              
             </div>
 
 

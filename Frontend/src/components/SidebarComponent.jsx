@@ -43,6 +43,7 @@ function SidebarComponent() {
               MENU
             </span>
             <Link to="/residuos">
+
             <li className='hover:bg-white/80 hover:text-[#38A800] p-[8px] cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faTrash} />Residuos</li>
             </Link>
             <Link to="/movimientos">
@@ -60,6 +61,12 @@ function SidebarComponent() {
             <Link>
             <li className='hover:bg-white/80 hover:text-[#38A800] p-[8px] cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faAlignCenter} />Elementos</li>
             </Link>
+
+              <li className='hover:bg-white/80 hover:text-[#38A800] p-2 cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faTrash} />Residuos</li>
+
+      
+
+ 
           </ul>
 
           <ul className='border-t overflow-hidden border-white mt-28 2xl:mt-36 py-5 border-opacity-50'>

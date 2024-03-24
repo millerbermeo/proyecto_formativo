@@ -23,13 +23,12 @@ router.post('/registrarmov', validarToken, registrarMovimiento)
 
 
 
+
 router.post('/registrarsalida', validarToken,[
     body('id_residuo').notEmpty().toInt().isInt(),
     body('destino').notEmpty().toInt().isInt(),
     body('usuario_adm').notEmpty().toInt().isInt()
 ] ,registrarSalida)
-
-
 
 
 router.post('/registraralm', validarToken, [
