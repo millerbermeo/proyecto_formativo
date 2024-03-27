@@ -94,8 +94,6 @@ export const agregarActividad = async (req, res) => {
                 from actividades
                 join areas on areas.id_lugar = actividades.lugar_actividad`;
 
-
-    
                 let [result] = await pool.query(query)
     
                 if (result.length > 0) {
@@ -111,6 +109,8 @@ export const agregarActividad = async (req, res) => {
             return res.status(500).json({ 'message': 'Error: ' + e });
         }
     };
+
+
     export const actividadActualizar = async (req, res) => {
         try {
             const { rol } = req.user;

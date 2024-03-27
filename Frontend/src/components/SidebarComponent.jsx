@@ -54,11 +54,11 @@ function SidebarComponent() {
             <li className='hover:bg-white/80 hover:text-[#38A800] p-[8px] cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faA} />Actividades</li>
             </Link>
             
-            <Link>
+            <Link to="/usuarios">
             <li className='hover:bg-white/80 hover:text-[#38A800] p-[8px] cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faUser} />Usuarios</li>
             </Link>
 
-            <Link>
+            <Link to="/elementos">
             <li className='hover:bg-white/80 hover:text-[#38A800] p-[8px] cursor-pointer h-10 2xl:h-11 flex items-center justify-start gap-x-4 2xl:text-lg'><FontAwesomeIcon icon={faAlignCenter} />Elementos</li>
             </Link>
 
