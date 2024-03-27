@@ -13,6 +13,7 @@ import ModalRegistrarSal2 from './mov_components/ModalRegistrarSal2';
 
 
 
+
 function TablaResiduos() {
   const [data, setData] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));

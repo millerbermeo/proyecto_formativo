@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, Select, SelectItem, Input, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import axiosClient from '../../axios-client';
 import { EditIcon } from '../icons/EditIcon';
+import {  Autocomplete,  AutocompleteSection,  AutocompleteItem} from "@nextui-org/autocomplete";
 
 function ModalActualizarResiduos({ fetchData, residuos }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -96,6 +97,7 @@ function ModalActualizarResiduos({ fetchData, residuos }) {
                                     placeholder="Enter nombre"
                                     variant="bordered"
                                     name="nombre_residuo"
+                                    defaultItems={nombre_residuo}
                                     value={formData.nombre_residuo || nombre_residuo}
                                     onChange={handleChange}
                                 />
@@ -104,6 +106,7 @@ function ModalActualizarResiduos({ fetchData, residuos }) {
                                     placeholder="Seleccione un Residuo"
                                     name="residuo"
                                     value={formData.residuo}
+                                    defaultItems={residuo}
                                     onChange={handleChange}
                                 >
                                     <SelectItem onClick={() => setFormData({ ...formData, residuo: "1" })}>
@@ -114,16 +117,19 @@ function ModalActualizarResiduos({ fetchData, residuos }) {
                                     </SelectItem>
                                 </Select>
 
+                        
+
                                 <Select
-                                    label="Tipo Residuo"
-                                    placeholder="Selecciona un Residuo"
-                                    name="tipo_residuo"
-                                    value={formData.tipo_residuo || tipo_residuo}
-                                    onChange={handleChange}
+                              label="Tipo Residuo"
+                              placeholder="Selecciona un Residuo"
+                              name="tipo_residuo"
+                              defaultItems={tipo_residuo}
+                              value={formData.tipo_residuo || tipo_residuo}
+                              onChange={handleChange}
                                 >
                                     {data.map((item, index) => (
                                         <SelectItem key={item.id_tipo} value={item.id_tipo}>
-                                            {item.tipo_residuo}
+                           {item.tipo_residuo}
                                         </SelectItem>
                                     ))}
                                 </Select>
@@ -134,6 +140,7 @@ function ModalActualizarResiduos({ fetchData, residuos }) {
                                     placeholder="Enter cantidad"
                                     variant="bordered"
                                     name="cantidad"
+                                    defaultItems={cantidad}
                                     value={formData.cantidad || cantidad}
                                     onChange={handleChange}
                                 />
@@ -142,6 +149,7 @@ function ModalActualizarResiduos({ fetchData, residuos }) {
                                     label="Unidad medida"
                                     placeholder="Selecciona una unidad"
                                     name="unidad_medida"
+                                    defaultItems={unidad_medida}
                                     value={formData.unidad_medida}
                                     onChange={handleChange}
                                 >
@@ -166,6 +174,7 @@ function ModalActualizarResiduos({ fetchData, residuos }) {
                                     label="Almacenamiento"
                                     placeholder="Selecciona un almacenamiento"
                                     name="fk_alm"
+                                    defaultItems={fk_alm}
                                     value={formData.fk_alm || fk_alm}
                                     onChange={handleChange}
                                 >

@@ -91,11 +91,11 @@ function TableMovimientos() {
                 />
 
 
-                <div className='flex justify-center items-center gap-x-4'> 
-                <ModalRegistrarMov fetchData={fetchData}/>
-                <ModalRegistrarSal fetchData={fetchData}/>
-</div>
-              
+                <div className='flex justify-center items-center gap-x-4'>
+                    <ModalRegistrarMov fetchData={fetchData} />
+                    <ModalRegistrarSal fetchData={fetchData} />
+                </div>
+
             </div>
 
 

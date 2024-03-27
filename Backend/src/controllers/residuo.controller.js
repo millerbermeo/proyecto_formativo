@@ -152,7 +152,7 @@ export const registrarSalida = async (req, res) => {
         if (rol !== 'administrador') {
             return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
         }
-        
+
 
         //variables del body
         const { id_residuo, destino, usuario_adm } = req.body;
@@ -221,7 +221,7 @@ export const registrarResiduo = async (req, res) => {
             return res.status(HTTP_STATUS.badRequest).json({ 'message': 'No se puedo Registrar' });
         }
 
-    
+
     } catch (error) {
         // Manejo de errores
         console.error('Error en registrarMovimiento:', error);
@@ -255,6 +255,34 @@ export const buscarResiduoId = async (req, res) => {
         }
     } catch (error) {
         console.error('Error en al listar residuo', error);
+        return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
+    }
+}
+
+export const deleteResiduoId = async (req, res) => {
+
+    try {
+
+        const rol = req.user.rol;
+
+        // Validar autorización del usuario
+        if (rol !== 'administrador') {
+            return res.status(HTTP_STATUS.unauthorized).json({ 'message': ERROR_MESSAGE.unauthorized });
+        }
+
+
+        let id = req.params.id
+
+        let query = `DELETE FROM residuos WHERE id_residuo = '${id}'`
+        let [result] = await pool.query(query)
+
+        if (result.length > 0) {
+            res.status(HTTP_STATUS.ok).json(result)
+        } else {
+            res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
+        }
+    } catch (error) {
+        console.error('Error en al eliminar residuo', error);
         return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
     }
 }
@@ -360,7 +388,7 @@ export const registrarEmpresas = async (req, res) => {
             return res.status(HTTP_STATUS.badRequest).json({ 'message': 'no se registro la empresa con exito' });
         }
 
-        
+
     } catch (error) {
         // Manejo de errores
         console.error('Error en registrar Almacenamiento:', error);
@@ -539,13 +567,13 @@ export const listarActividades = async (req, res) => {
         let [result] = await pool.query(query)
 
         if (result.length > 0) {
-            
+
             res.status(HTTP_STATUS.ok).json(result)
 
         } else {
             res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
         }
-        
+
     } catch (error) {
         console.error('Error en al listar actividades', error);
         return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });
@@ -570,13 +598,13 @@ export const listarEmpresas = async (req, res) => {
 
         if (result.length > 0) {
 
-            
+
             res.status(HTTP_STATUS.ok).json(result)
 
         } else {
             res.status(HTTP_STATUS.notFound).json({ 'message': ERROR_MESSAGE.notFound })
         }
-        
+
     } catch (error) {
         console.error('Error en al listar empresas_recoleccion', error);
         return res.status(HTTP_STATUS.internalServerError).json({ 'message': ERROR_MESSAGE.internalServerError });

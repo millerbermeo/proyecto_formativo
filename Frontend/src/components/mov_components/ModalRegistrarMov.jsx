@@ -92,11 +92,7 @@ function ModalRegistrarMov({fetchData}) {
 
     return (
         <div className="flex flex-col gap-2">
-<<<<<<< HEAD
             <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Registrar Entrada</Button>
-=======
-            <Button color="primary" endContent={<PlusIcon />} onPress={onOpen}>Movimiento</Button>
->>>>>>> 7be9fc0b3581f6b2b226a9fe80bd071d9489f8ea
 
             <Modal
                 isOpen={isOpen}
@@ -159,7 +155,6 @@ function ModalRegistrarMov({fetchData}) {
                                     onChange={handleChange}
                                     disabled={!data3.length} // Deshabilita el menú desplegable si no hay actividades disponibles
                                 >
-<<<<<<< HEAD
                                     {data3.length ? ( // Verifica si hay actividades disponibles
                                         data3.map((item, index) => (
                                             <SelectItem key={item.id_actividad} value={item.id_actividad}>
@@ -170,18 +165,6 @@ function ModalRegistrarMov({fetchData}) {
                                         // Si no hay actividades, muestra un mensaje
                                         <SelectItem disabled>
                                             No hay actividades disponibles
-=======
-
-                                    <SelectItem>
-                                        Seleccionar una actividad
-                                    </SelectItem>
-
-
-
-                                    {data3.map((item, index) => (
-                                        <SelectItem key={item.id_actividad} value={item.id_actividad}>
-                                            {item.nombre_act}
->>>>>>> 7be9fc0b3581f6b2b226a9fe80bd071d9489f8ea
                                         </SelectItem>
                                     )}
                                 </Select>

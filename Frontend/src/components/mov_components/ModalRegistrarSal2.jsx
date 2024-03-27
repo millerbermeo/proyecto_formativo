@@ -10,12 +10,12 @@ function ModalRegistrarSal2({ fetchData, residuos }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const [formData, setFormData] = useState({
-        id_residuo: "",
+        id_residuo: residuos.id_residuo,
         usuario_adm: "",
         destino: ""
     });
 
-    let id = residuos.id_residuo
+
 
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
@@ -76,7 +76,7 @@ function ModalRegistrarSal2({ fetchData, residuos }) {
         try {
             // Aquí puedes enviar los datos a tu backend utilizando axios o fetch
             console.log(formData);
-            console.log("aaaaaaaaa", id)
+  
             await axiosClient.post('http://localhost:3000/residuo/registrarsalida', formData).then((response) => {
                 console.log(response.data)
                 fetchData()
@@ -103,15 +103,14 @@ function ModalRegistrarSal2({ fetchData, residuos }) {
                             <ModalBody>
 
 
-                                <Input
+                                {/* <Input
                                     label="Residuo"
                                     placeholder="Selecciona un Residuo"
                                     name="id_residuo"
                                     variant="bordered"
-                                    value={id}
-                                    defaultValue={id}
+                                    value={id_residuo}
                                     onChange={handleChange}
-                                />
+                                /> */}
 
 
                                 <Select

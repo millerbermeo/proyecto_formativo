@@ -9,7 +9,7 @@ function NavbarComponent() {
 
 
     return (
-        <div className='w-full h-[60px] bg-white flex justify-between items-center px-5 shadow-xl shadow-gray-200'>
+        <div className='w-full h-[60px] py-5 bg-white flex justify-between items-center px-5 shadow-xl shadow-gray-200'>
             <div className='w-96 h-full'>
                 {/* <span>Dashboard</span> */}
             </div>

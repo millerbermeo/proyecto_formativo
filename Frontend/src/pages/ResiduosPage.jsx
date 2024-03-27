@@ -8,7 +8,7 @@ function ResiduosPage() {
   return (
     < main className='flex bg-gray-100'>
       <SidebarComponent />
-      <div className='flex flex-col w-full'>
+      <div className='flex flex-col w-full h-screen overflow-y-auto'>
         <NavbarComponent />
         <section className='px-6 py-5 pt-10'>
           {/* <DatatableResiduos/> */}

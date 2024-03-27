@@ -1,65 +1,32 @@
-//RUTAS MILLER
-
 import { Router } from "express";
 import { validarToken } from "../controllers/validator.controller.js";
-import { actualizarResiduoId, buscarResiduoId, listarActividades, listarAdmin, listarAlmacenamientos, listarEmpresas, listarMovimientos, listarResiduo, listarTiposResiduos, registrarAlmacenamiento, registrarEmpresas, registrarMovimiento, registrarResiduo, registrarSalida } from "../controllers/residuo.controller.js";
-import { body } from 'express-validator';
+import { actualizarResiduoId, buscarResiduoId, deleteResiduoId, listarActividades, listarAdmin, listarAlmacenamientos, listarEmpresas, listarMovimientos, listarResiduo, listarTiposResiduos, registrarAlmacenamiento, registrarEmpresas, registrarMovimiento, registrarResiduo, registrarSalida } from "../controllers/residuo.controller.js";
+import { validarRegistroResiduo, validarRegistroMovimiento, validarRegistroAlmacenamiento, validarRegistroEmpresa, validarActualizarResiduo } from "../validaciones/validacion.residuos.js";
 
+const router = Router();
 
-const router = Router()
+router.post('/registrar', validarToken, validarRegistroResiduo, registrarResiduo);
 
-router.post('/registrar', validarToken, [
-    body('nombre_residuo').notEmpty().isString(),
-    body('residuo').notEmpty().toInt().isInt(),
-    body('tipo_residuo').notEmpty().toInt().isInt(),
-    body('cantidad').notEmpty().toInt().isInt(),
-    body('unidad_medida').notEmpty().toInt().isInt(),
-    body('fk_alm').notEmpty().toInt().isInt()  
-], registrarResiduo);
+router.post('/registrarmov', validarToken, validarRegistroMovimiento, registrarMovimiento);
 
+router.post('/registrarsalida', validarToken, validarRegistroMovimiento, registrarSalida);
 
+router.post('/registraralm', validarToken, validarRegistroAlmacenamiento, registrarAlmacenamiento);
 
-router.post('/registrarmov', validarToken, registrarMovimiento)
+router.post('/registrarempresa', validarToken, validarRegistroEmpresa, registrarEmpresas);
 
+router.put('/actualizar/:id', validarToken, validarActualizarResiduo, actualizarResiduoId);
 
+router.delete('/eliminar/:id', validarToken, deleteResiduoId);
 
+router.get('/listar', validarToken, listarResiduo);
+router.get('/listar_mov', validarToken, listarMovimientos);
+router.get('/listar_tipos', validarToken, listarTiposResiduos);
+router.get('/listar_alm', validarToken, listarAlmacenamientos);
+router.get('/buscar/:id', validarToken, buscarResiduoId);
 
-router.post('/registrarsalida', validarToken,[
-    body('id_residuo').notEmpty().toInt().isInt(),
-    body('destino').notEmpty().toInt().isInt(),
-    body('usuario_adm').notEmpty().toInt().isInt()
-] ,registrarSalida)
+router.get('/listar_empresas', validarToken, listarEmpresas);
+router.get('/listar_admin', validarToken, listarAdmin);
+router.get('/listar_actividad', validarToken, listarActividades);
 
-
-router.post('/registraralm', validarToken, [
-    body('nombre_alm').notEmpty().isString()
-] ,registrarAlmacenamiento)
-
-
-router.post('/registrarempresa', validarToken,[
-    body('nombre_empresa').notEmpty().isString(),
-    body('descripcion_empresa').notEmpty().isString(),
-    body('contacto_empresa').notEmpty().isString()
-],registrarEmpresas)
-
-router.put('/actualizar/:id', validarToken,[
-    body('nombre_residuo').notEmpty().isString(),
-    body('residuo').notEmpty().toInt().isInt(),
-    body('tipo_residuo').notEmpty().toInt().isInt(),
-    body('cantidad').notEmpty().toInt().isInt(),
-    body('unidad_medida').notEmpty().toInt().isInt(),
-    body('fk_alm').notEmpty().toInt().isInt()
-] ,actualizarResiduoId)
-
-
-router.get('/listar', validarToken, listarResiduo)
-router.get('/listar_mov', validarToken, listarMovimientos)
-router.get('/listar_tipos', validarToken, listarTiposResiduos)
-router.get('/listar_alm', validarToken, listarAlmacenamientos)
-router.get('/buscar/:id', validarToken, buscarResiduoId)
-
-router.get('/listar_empresas', validarToken, listarEmpresas)
-router.get('/listar_admin', validarToken, listarAdmin)
-router.get('/listar_actividad', validarToken, listarActividades)
-
-export default router
+export default router;
