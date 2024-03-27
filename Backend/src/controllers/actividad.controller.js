@@ -2,59 +2,135 @@ import { pool } from "../database/conexion.js";
 
 export const agregarActividad = async (req, res) => {
     try {
-        const rol = req.user.rol;
+
+        const {rol}  = req.user;
 
         // Verificar si el usuario tiene el rol de administrador
         if (rol === 'administrador') {
-            const { id_tipo_actividad, nombre_actividad, descripcion_actividad } = req.body;
+            
+            const { tipo_actividad, nombre_act, lugar_actividad, fecha_actividad } = req.body;
 
-            // Verificar si todos los datos necesarios están presentes
-            if (!id_tipo_actividad || !nombre_actividad || !descripcion_actividad) {
-                return res.status(400).json({ 'message': 'Faltan datos obligatorios para la actividad' });
-            }
-
-            // Insertar la nueva actividad en la base de datos
-            const result = await pool.query(
-                "INSERT INTO tu_tabla (id_tipo_actividad, nombre_actividad, descripcion_actividad) VALUES (?, ?, ?)",
-                [id_tipo_actividad, nombre_actividad, descripcion_actividad]
+        //Iniciar Transaccion
+           await pool.query('START TRANSACTION')
+           
+           //Insertar la actividad
+            const [actividadResult] = await pool.query(
+                'INSERT INTO actividades (tipo_actividad, nombre_act, lugar_actividad, fecha_actividad) VALUES (?, ?, ?, ?)',
+                [tipo_actividad, nombre_act,lugar_actividad, fecha_actividad]
             );
 
-            // Devolver la actividad recién creada
-            return res.status(201).json({ 'message': 'Actividad creada satisfactoriamente', 'data': result });
-        } else {
-            return res.status(403).json({ 'message': 'Error: usuario no autorizado' });
-        }
-    } catch (e) {
-        return res.status(500).json({ 'message': 'Error: ' + e });
+            const id_actividad = actividadResult.insertId;
+
+            //Insertar usuarios de manera sincronica
+
+
+
+            //confirmar
+            await pool.query('COMMIT');
+
+            res.status(201).json({success: true, message: 'actividad con usuarios terminada con exito'});
+        } 
+    } catch (error) {
+
+        //Revertir en caso de error 
+        await pool.query('ROLLBACK');
+
+        console.error('Error al insertar actividad con usuarios:', error);
+        res.status(500).json({ success: false, 'message': 'Error interno del servidor' + error});
     }
 };
-export const estadoActividad = async (req, res) => {
-    try {
-        const { id_actividad, nuevo_estado } = req.body;
+    export const actividadTerminada = async (req, res) => {
+        try {
+            const { rol } = req.user;
 
-        // Verificar si todos los datos necesarios están presentes
-        if (!id_actividad || !nuevo_estado) {
-            return res.status(400).json({ 'message': 'Faltan datos obligatorios para cambiar el estado de la actividad' });
+            if (rol ==='administrador') {
+                let id = req.params.id
+                let sql = `UPDATE actividades SET  estado_actividad = 'terminada' WHERE id_actividad = ${id} `
+
+                await pool.query(sql)
+                res.status(200).json({success: true, message: 'Estado Actualizado.'});
+            } else {
+                return res.status(403).json({'message': 'Error: usuario no autorizado'});
+            }
+        } catch (error) {
+            console.error("Error actualizar estado:", error);
+            res.status(500).json({ success: false,'message': 'Error interno del servidor' + error});
         }
+    };
 
-        // Verificar si el nuevo estado es válido (En Proceso o Terminada)
-        if (nuevo_estado !== 'En Proceso' && nuevo_estado !== 'Terminada') {
-            return res.status(400).json({ 'message': 'El nuevo estado debe ser "En Proceso" o "Terminada"' });
+    export const actividadListarId = async (req, res) => {
+        try {
+            const { rol } = req.user;
+            if (rol ==='administrador') {
+                const id_actividad = req.params.id;
+                const query = `select actividades.*,
+                areas.nombre_area AS nombre_lugar
+                from actividades
+                join areas on areas.id_lugar = actividades.lugar_actividad WHERE id_actividad = ?`;
+                const [result] = await pool.query(query, [id_actividad])
+
+                if (result.length > 0){
+                    return res.status(200).json(result);
+                } else {
+                    return res.status(403).json({'message': `No se encontraron registros de actividades con el id ${id_actividad}`});
+                }
+            } else {
+                return res.status(403).json({'message': 'Error: usuario no autorizado'});
+            }
+        } catch (error) {
+            return res.status(500).json({'message': 'Error: ' + e})
         }
+    };
 
-        // Actualizar el estado de la actividad
-        const result = await pool.query(
-            "UPDATE actividades SET estado_actividad = ? WHERE id_actividad = ?",
-            [nuevo_estado, id_actividad]
-        );
+    export const actividadListar = async (req, res) => {
 
-        // Verificar la actividad y se actualizó correctamente
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ 'message': 'No se encontró ninguna actividad con el ID proporcionado' });
+        try {
+            const { rol } = req.user;
+    
+            if (rol === 'administrador') {
+    
+                let query = `select actividades.*,
+                areas.nombre_area AS nombre_lugar
+                from actividades
+                join areas on areas.id_lugar = actividades.lugar_actividad`;
+
+
+    
+                let [result] = await pool.query(query)
+    
+                if (result.length > 0) {
+                    return res.status(200).json(result);
+                } else {
+                    return res.status(404).json({ 'message': 'No se encontraron registros de actividades' });
+                }
+    
+            } else {
+                return res.status(403).json({ 'message': 'Error: usuario no autorizado' });
+            }
+        } catch (e) {
+            return res.status(500).json({ 'message': 'Error: ' + e });
         }
-
-        return res.status(200).json({ 'message': 'Estado de la actividad actualizado correctamente' });
-    } catch (e) {
-        return res.status(500).json({ 'message': 'Error: ' + e });
-    }
-};
+    };
+    export const actividadActualizar = async (req, res) => {
+        try {
+            const { rol } = req.user;
+    
+            if (rol === 'administrador') {
+                const id_actividad = req.params.id;
+                const { nombre_act, estado_actividad, lugar_actividad, fecha_actividad } = req.body;
+    
+                const sql = `UPDATE actividades SET nombre_act = ?, estado_actividad = ?, lugar_actividad = ?, fecha_actividad = ? WHERE id_actividad = ?`;
+    
+                await pool.query(sql, [nombre_act, estado_actividad, lugar_actividad, fecha_actividad, id_actividad]);
+    
+                res.status(200).json({ success: true, message: 'Actividad Actualizada.' });
+            } else {
+                return res.status(403).json({ message: 'Error: usuario no autorizado' });
+            }
+        } catch (error) {
+            console.error("Error actualizar actividad:", error);
+            res.status(500).json({ success: false, message: "Error interno del servidor." });
+        }
+    };
+    
+    
